@@ -1,12 +1,20 @@
+//
+//  File.swift
+//  
+//
+//  Created by Boaz James on 20/07/2023.
+//
+
 import UIKit
 
-@IBDesignable
-public class BaseTextfield: UIView {
+public class BasePhoneField: UIView {
     var isDeleting = false
     
-    @IBInspectable public var maxLength = 0
+    @IBInspectable public var maxLength = 10
     
     var labelHeightConstraint: NSLayoutConstraint!
+    var countryCodeConstraint: NSLayoutConstraint!
+    
     @IBInspectable public var labelText = ""
     @IBInspectable public var placehodler = ""
     
@@ -58,20 +66,6 @@ public class BaseTextfield: UIView {
         }
     }
     
-    @IBInspectable public var keyboardType: UIKeyboardType = UIKeyboardType.default {
-        didSet {
-            textfield.keyboardType = keyboardType
-            setText(text)
-        }
-    }
-    
-    @IBInspectable public var textContentType: UITextContentType? {
-        didSet {
-            textfield.textContentType = textContentType
-            setText(text)
-        }
-    }
-    
     @IBInspectable public var labelFont: UIFont = UIFont.systemFont(ofSize: 12) {
         didSet {
             label.font = labelFont
@@ -90,9 +84,9 @@ public class BaseTextfield: UIView {
         }
     }
     
-    @IBInspectable public var secondaryLabelFont: UIFont = UIFont.systemFont(ofSize: 16) {
+    @IBInspectable public var countryCodeLabelFont: UIFont = UIFont.systemFont(ofSize: 16) {
         didSet {
-            secondaryLabel.font = secondaryLabelFont
+            lblCountryCode.font = countryCodeLabelFont
         }
     }
     
@@ -112,17 +106,73 @@ public class BaseTextfield: UIView {
         return view
     }()
     
-    var label: PaddingLabel = {
-        let view = PaddingLabel()
+    public var countryCodeContainer: UIView =  {
+        let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+    
+        return view
+    }()
+    
+    var flagImg: UIImageView = {
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleToFill
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.image = UIImage(named: "ke", in: .module, compatibleWith: nil)
+        return imgView
+    }()
+    
+    var contactImg: UIImageView = {
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleToFill
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.image = UIImage(named: "contact")
+        imgView.isUserInteractionEnabled = true
+        return imgView
+    }()
+    
+    var lblCountryCode: UILabel = {
+        let lbl = UILabel()
+        lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.text = "KE"
+        return lbl
+    }()
+    
+    var icPicker: UIImageView = {
+        let imgView = UIImageView()
+        imgView.contentMode = .scaleToFill
+        imgView.translatesAutoresizingMaskIntoConstraints = false
+        imgView.image = UIImage(named: "chevron_down", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        return imgView
+    }()
+    
+    var phoneFieldContainer: UIView =  {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
+    
+        return view
+    }()
+    
+    var textfield: TextFieldWithPadding = {
+        let textField = TextFieldWithPadding()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.textColor = .labelColor
+        textField.textAlignment = .left
+        textField.borderStyle = .none
+        textField.keyboardType = .numberPad
+        textField.textPadding = UIEdgeInsets(top: 0, left: 90, bottom: 0, right: 10)
+        textField.layer.cornerRadius = 5
+        textField.textContentType = .telephoneNumber
+        return textField
+    }()
+    
+    var label: UILabel = {
+        let view = UILabel()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.textAlignment = .left
-        view.numberOfLines = 0
-        view.leftInset = 0
-        view.rightInset = 0
-        view.topInset = 0
-        view.bottomInset = 0
-        view.labelCornerRadius = 0
         return view
     }()
     
@@ -140,38 +190,6 @@ public class BaseTextfield: UIView {
         return view
     }()
     
-    var secondaryLabel: PaddingLabel = {
-        let view = PaddingLabel()
-        view.backgroundColor = .clear
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        view.leftInset = 0
-        view.rightInset = 0
-        view.topInset = 0
-        view.bottomInset = 0
-        return view
-    }()
-    
-    var textfield: TextFieldWithPadding = {
-        let textField = TextFieldWithPadding()
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.textAlignment = .left
-        textField.borderStyle = .none
-        textField.keyboardType = .default
-        textField.textPadding = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        return textField
-    }()
-    
-    var icon: UIImageView = {
-        let view = UIImageView()
-        view.backgroundColor = .clear
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.tintColor = .black
-        view.applyAspectRatio(aspectRation: 1)
-        return view
-    }()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -184,33 +202,42 @@ public class BaseTextfield: UIView {
     }
     
     func setupView() {
-        setupColors()
-        
         label.font = labelFont
-        secondaryLabel.font = secondaryLabelFont
         textfield.font = textfieldFont
         lblError.font = errorLabelFont
-        
-//        textfield.addDoneButtonOnKeyboard(color: highlightColor)
+        lblCountryCode.font = countryCodeLabelFont
         
         mainContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(focusTextField)))
         textfield.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
     
-    public func setPlaceholder(_ placeholder: String) {
-        self.placehodler = placeholder
+    func setPlaceholder(_ placeholder: String) {
+        textfield.placeholder = placeholder
     }
     
-    public func setPlaceholder(_ placeholder: String, labelText: String) {
-        self.placehodler = placeholder
-        self.labelText = labelText
+    func setCountry(_ country: Country) {
+        flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
+        lblCountryCode.text = country.code
+        countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
     }
     
-    public func setText(_ text: String) {}
-    
-    public func showError(_ message: String, focusOnField: Bool = false) {}
-    
-    public func hideError() {}
+    func setupColors() {
+        let errorMessage = lblError.text ?? ""
+        
+        if errorMessage.isEmpty {
+            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
+        } else {
+            mainContainerView.borderColor = errorColor
+            label.textColor = errorColor
+        }
+        
+        label.textColor = labelColor
+        lblError.textColor = errorColor
+        lblCountryCode.textColor = labelColor
+        textfield.textColor = labelColor
+        textfield.tintColor = highlightColor
+    }
     
     @objc private func focusTextField() {
         textfield.becomeFirstResponder()
@@ -223,13 +250,7 @@ public class BaseTextfield: UIView {
     @objc public func textDidChange(_ sender: UITextField) {
         guard let text = sender.text else { return }
         
-        var myText: String {
-            if textfield.keyboardType == .numberPad {
-                return text.onlyDigits()
-            }
-            
-            return text
-        }
+        let myText = text.onlyDigits()
         
         if myText != text {
             sender.text = myText
@@ -238,11 +259,26 @@ public class BaseTextfield: UIView {
         hideError()
     }
     
-    func setupColors() {}
+    public func showError(_ message: String, focusOnField: Bool = false) {
+        lblError.text = message
+        
+        if focusOnField {
+            textfield.becomeFirstResponder()
+        }
+        
+        mainContainerView.borderColor = errorColor
+        label.textColor = errorColor
+    }
+    
+    public func hideError() {
+        lblError.text = nil
+        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : .clear
+        label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
+    }
 }
 
-@IBDesignable
-public class JBTextfield: BaseTextfield {
+public class JBPhoneField: BasePhoneField {
+    private(set) var selectedCountry: Country = Country(name: "Kenya", code: "KE", dialCode: "254")
     
     override func setupView() {
         super.setupView()
@@ -250,10 +286,13 @@ public class JBTextfield: BaseTextfield {
         mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
-        self.textfield.keyboardType = keyboardType
         
         self.addSubview(mainContainerView)
         mainContainerView.addSubview(containerView)
+        containerView.addSubview(countryCodeContainer)
+        countryCodeContainer.addSubview(flagImg)
+        countryCodeContainer.addSubview(lblCountryCode)
+        countryCodeContainer.addSubview(icPicker)
         containerView.addSubview(textfield)
         containerView.addSubview(label)
         self.addSubview(lblError)
@@ -264,12 +303,50 @@ public class JBTextfield: BaseTextfield {
         containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
+        NSLayoutConstraint.activate([
+            countryCodeContainer.leadingAnchor.constraint(equalTo: mainContainerView.leadingAnchor, constant: 10),
+            countryCodeContainer.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor),
+            countryCodeContainer.heightAnchor.constraint(equalTo: containerView.heightAnchor),
+        ])
+        
+        flagImg.applyAspectRatio(aspectRation: 3 / 2)
+        
+        NSLayoutConstraint.activate([
+            flagImg.widthAnchor.constraint(equalToConstant: 30),
+            flagImg.leadingAnchor.constraint(equalTo: countryCodeContainer.leadingAnchor, constant: 0),
+            flagImg.centerYAnchor.constraint(equalTo: countryCodeContainer.centerYAnchor)
+        ])
+        
+        countryCodeConstraint = lblCountryCode.widthAnchor.constraint(equalToConstant: lblCountryCode.intrinsicContentSize.width)
+        countryCodeConstraint.activate()
+        
+        NSLayoutConstraint.activate([
+            lblCountryCode.leadingAnchor.constraint(equalTo: flagImg.trailingAnchor, constant: 8),
+            lblCountryCode.trailingAnchor.constraint(equalTo: icPicker.leadingAnchor, constant: -5),
+            lblCountryCode.centerYAnchor.constraint(equalTo: countryCodeContainer.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            icPicker.widthAnchor.constraint(equalToConstant: 12),
+            icPicker.heightAnchor.constraint(equalToConstant: 12),
+            icPicker.centerYAnchor.constraint(equalTo: countryCodeContainer.centerYAnchor),
+            icPicker.trailingAnchor.constraint(equalTo: countryCodeContainer.trailingAnchor, constant: 0)
+        ])
+        
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            label.leadingAnchor.constraint(equalTo: textfield.leadingAnchor, constant: 0),
             label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint
+        ])
+        
+        NSLayoutConstraint.activate([
+            textfield.leadingAnchor.constraint(equalTo: countryCodeContainer.trailingAnchor, constant: 10),
+            textfield.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            textfield.heightAnchor.constraint(equalToConstant: 40),
+            textfield.topAnchor.constraint(equalTo: label.centerYAnchor),
+            textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
         
         textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
@@ -282,22 +359,14 @@ public class JBTextfield: BaseTextfield {
         lblError.pinToView(parentView: self, top: false)
         lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
         
-        textfield.textPadding = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
         
         textfield.delegate = self
-                
     }
     
-    public override func setPlaceholder(_ placeholder: String) {
-        super.setPlaceholder(placeholder)
+    override func setPlaceholder(_ placeholder: String) {
         textfield.placeholder = placeholder
         label.text = placeholder
-    }
-    
-    public override func setPlaceholder(_ placeholder: String, labelText: String) {
-        super.setPlaceholder(placeholder, labelText: labelText)
-        textfield.placeholder = placeholder
-        label.text = labelText
     }
     
     private func showLabel() {
@@ -320,81 +389,30 @@ public class JBTextfield: BaseTextfield {
         }
     }
     
-    public override func setText(_ text: String) {
+    func setText(_ text: String) {
         if text.isEmpty {
             textfield.text = text
-            label.textColor = labelColor
+            label.textColor = .secondaryLabelColor
             
             if !labelHeightConstraint.isActive {
                 hideLabel()
             }
         } else {
-            var myText: String {
-                if textfield.keyboardType == .numberPad {
-                    return text.onlyDigits()
-                }
-                
-                return text
-            }
-            
-            textfield.text = myText
-            
-            label.textColor = labelColor
+            textfield.text = text
+            label.textColor = .labelColor
             
             if labelHeightConstraint.isActive {
                 showLabel()
             }
         }
     }
-    
-    public override func showError(_ message: String, focusOnField: Bool = false) {
-        lblError.text = message
-        
-        if focusOnField {
-            textfield.becomeFirstResponder()
-        }
-        
-        mainContainerView.borderColor = errorColor
-        icon.tintColor = errorColor
-        label.textColor = errorColor
-    }
-    
-    public override func hideError() {
-        lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : .clear
-        icon.tintColor = textfield.isFirstResponder ? highlightColor : .clear
-        label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
-    }
-    
-    override func setupColors() {
-        let errorMessage = lblError.text ?? ""
-        
-        if errorMessage.isEmpty {
-            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
-            icon.tintColor = textfield.isFirstResponder ? highlightColor : labelColor
-            label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
-        } else {
-            mainContainerView.borderColor = errorColor
-            icon.tintColor = errorColor
-            label.textColor = errorColor
-        }
-        
-        label.textColor = labelColor
-        lblError.textColor = errorColor
-        secondaryLabel.textColor = labelColor
-        textfield.textColor = labelColor
-        textfield.tintColor = highlightColor
-        
-//        textfield.addDoneButtonOnKeyboard(color: highlightColor)
-    }
 }
 
 // Mark: UITextFieldDelegate
-extension JBTextfield: UITextFieldDelegate {
+extension JBPhoneField: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         label.textColor = highlightColor
         mainContainerView.borderColor = highlightColor
-        icon.tintColor = highlightColor
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -407,7 +425,6 @@ extension JBTextfield: UITextFieldDelegate {
     public func textFieldDidEndEditing(_ textField: UITextField) {
         label.textColor = labelColor
         mainContainerView.borderColor = strokeColor
-        icon.tintColor = labelColor
         
         if let text = textField.text {
             if text.isEmpty {
@@ -437,15 +454,9 @@ extension JBTextfield: UITextFieldDelegate {
             return true
         }
         
-        var myFullText: String {
-            if textfield.keyboardType == .numberPad {
-                return fullText.onlyDigits()
-            }
-            
-            return fullText
-        }
+        let myFullText = fullText.onlyDigits()
         
-        if textfield.keyboardType == .numberPad && !myFullText.isNumeric() {
+        if !myFullText.isNumeric() {
             return false
         }
         
