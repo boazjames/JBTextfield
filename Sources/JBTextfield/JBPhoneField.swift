@@ -15,8 +15,8 @@ public class BasePhoneField: UIView {
     var labelHeightConstraint: NSLayoutConstraint!
     var countryCodeConstraint: NSLayoutConstraint!
     
-    @IBInspectable public var labelText = ""
-    @IBInspectable public var placehodler = ""
+    @IBInspectable public var labelText = "Phone number"
+    @IBInspectable public var placehodler = "Phone number"
     
     public var text: String {
         return textfield.text ?? ""
@@ -89,6 +89,10 @@ public class BasePhoneField: UIView {
             lblCountryCode.font = countryCodeLabelFont
         }
     }
+    
+    var customDialCodes = [String]()
+    var selectedCountry = Country(name: "Kenya", code: "KE", dialCode: "254")
+    var selectedCountryCode = "254"
     
     var mainContainerView: UIView = {
         let view = UIView()
@@ -194,11 +198,15 @@ public class BasePhoneField: UIView {
         super.init(frame: frame)
         
         setupView()
+        
+        setCountry(selectedCountry)
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupView()
+        
+        setCountry(selectedCountry)
     }
     
     func setupView() {
@@ -207,15 +215,34 @@ public class BasePhoneField: UIView {
         lblError.font = errorLabelFont
         lblCountryCode.font = countryCodeLabelFont
         
+        setupColors()
+        
+        setPlaceholder(placehodler)
+        
+        textfield.addDoneButtonOnKeyboard(color: .highlightColor)
+        
+        countryCodeContainer.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showCountryPicker)))
         mainContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(focusTextField)))
         textfield.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
     }
     
-    func setPlaceholder(_ placeholder: String) {
+    public func setPlaceholder(_ placeholder: String) {
+        self.placehodler = placeholder
+        self.labelText = placeholder
         textfield.placeholder = placeholder
+        label.text = labelText
+    }
+    
+    public func setPlaceholder(_ placeholder: String, labelText: String) {
+        self.placehodler = placeholder
+        self.labelText = labelText
+        textfield.placeholder = placeholder
+        label.text = labelText
     }
     
     func setCountry(_ country: Country) {
+        selectedCountry = country
+        selectedCountryCode = country.dialCode
         flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
         lblCountryCode.text = country.code
         countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
@@ -237,6 +264,7 @@ public class BasePhoneField: UIView {
         lblCountryCode.textColor = labelColor
         textfield.textColor = labelColor
         textfield.tintColor = highlightColor
+        icPicker.tintColor = labelColor
     }
     
     @objc private func focusTextField() {
@@ -275,10 +303,18 @@ public class BasePhoneField: UIView {
         mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : .clear
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
+    
+    @objc private func showCountryPicker() {
+        let vc = CountryPickerVC()
+        vc.selectedCountryCode = selectedCountryCode
+        vc.customDialCodes = customDialCodes
+        vc.textfield = self
+        let nc = UINavigationController(rootViewController: vc)
+        findViewController()?.present(nc, animated: true)
+    }
 }
 
 public class JBPhoneField: BasePhoneField {
-    private(set) var selectedCountry: Country = Country(name: "Kenya", code: "KE", dialCode: "254")
     
     override func setupView() {
         super.setupView()
@@ -304,8 +340,8 @@ public class JBPhoneField: BasePhoneField {
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
         NSLayoutConstraint.activate([
-            countryCodeContainer.leadingAnchor.constraint(equalTo: mainContainerView.leadingAnchor, constant: 10),
-            countryCodeContainer.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor),
+            countryCodeContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            countryCodeContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             countryCodeContainer.heightAnchor.constraint(equalTo: containerView.heightAnchor),
         ])
         
@@ -349,24 +385,12 @@ public class JBPhoneField: BasePhoneField {
             textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
         
-        textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
-        NSLayoutConstraint.activate([
-            textfield.heightAnchor.constraint(equalToConstant: 40),
-            textfield.topAnchor.constraint(equalTo: label.centerYAnchor),
-            textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
-        
         lblError.pinToView(parentView: self, top: false)
         lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
         
         textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 10)
         
         textfield.delegate = self
-    }
-    
-    override func setPlaceholder(_ placeholder: String) {
-        textfield.placeholder = placeholder
-        label.text = placeholder
     }
     
     private func showLabel() {

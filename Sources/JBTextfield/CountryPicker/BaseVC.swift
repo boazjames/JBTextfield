@@ -25,7 +25,7 @@ class BaseVC: UIViewController {
         self.view.tag = 1
         changeStatusBarStyle(.lightContent)
         
-//        UITextField.appearance().tintColor = .primary
+//        UITextField.appearance().tintColor = .highlightColor
         
         changeNavBarAppearance(isLightContent: true)
         
@@ -65,14 +65,16 @@ class BaseVC: UIViewController {
             initialStyle = style
         }
         
-        if self.traitCollection.userInterfaceStyle == .dark {
-            if #available(iOS 13.0, *) {
-                changeStatusBarStyle(.lightContent)
+        if #available(iOS 12.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                if #available(iOS 13.0, *) {
+                    changeStatusBarStyle(.lightContent)
+                } else {
+                    changeStatusBarStyle(.default)
+                }
             } else {
-                changeStatusBarStyle(.default)
+                changeStatusBarStyle(initialStyle)
             }
-        } else {
-            changeStatusBarStyle(initialStyle)
         }
         
         traitCollectionChaged = true
@@ -117,16 +119,16 @@ class BaseVC: UIViewController {
             
             if isLightContent {
                 navBarAppearance.configureWithOpaqueBackground()
-                navBarAppearance.backgroundColor = .primary
-                navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.littleWhite]
-                navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.littleWhite]
+                navBarAppearance.backgroundColor = .highlightColor
+                navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+                navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
                 navigationController?.navigationBar.standardAppearance = navBarAppearance
                 navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
             } else {
                 navBarAppearance.configureWithOpaqueBackground()
-                navBarAppearance.backgroundColor = .littleWhite
-                navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.littleLabelColor]
-                navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.littleLabelColor]
+                navBarAppearance.backgroundColor = .white
+                navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.labelColor]
+                navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.labelColor]
                 navigationController?.navigationBar.standardAppearance = navBarAppearance
                 navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
             }
@@ -139,16 +141,16 @@ class BaseVC: UIViewController {
         
         if isLightContent {
             navigationController?.navigationBar.isTranslucent = false
-            navigationController?.navigationBar.tintColor = .littleWhite
-            navigationController?.navigationBar.barTintColor = .primary
+            navigationController?.navigationBar.tintColor = .white
+            navigationController?.navigationBar.barTintColor = .highlightColor
             navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 20.0),
-                                                                       .foregroundColor: UIColor.littleWhite]
+                                                                       .foregroundColor: UIColor.white]
         } else {
             navigationController?.navigationBar.isTranslucent = false
-            navigationController?.navigationBar.tintColor = .littleLabelColor
-            navigationController?.navigationBar.barTintColor = .littleWhite
+            navigationController?.navigationBar.tintColor = .labelColor
+            navigationController?.navigationBar.barTintColor = .white
             navigationController?.navigationBar.titleTextAttributes = [.font: UIFont.boldSystemFont(ofSize: 20.0),
-                                                                       .foregroundColor: UIColor.primary]
+                                                                       .foregroundColor: UIColor.highlightColor]
         }
     }
     

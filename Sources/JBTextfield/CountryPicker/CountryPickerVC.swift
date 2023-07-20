@@ -8,26 +8,14 @@
 import UIKit
 
 class CountryPickerVC: BaseVC {
-    var delegate: CountryPickerDelegate!
-    
-    private var navBar: UINavigationBar = {
-        let navBar = UINavigationBar()
-        navBar.translatesAutoresizingMaskIntoConstraints = false
-        navBar.isTranslucent = false
-        navBar.tintColor = .white
-        if var textAttributes = navBar.titleTextAttributes {
-            textAttributes[NSAttributedString.Key.foregroundColor] = UIColor.black
-            navBar.titleTextAttributes = textAttributes
-        }
-        navBar.barTintColor = .white
-        return navBar
-    }()
+    var delegate: CountryPickerDelegate?
+    var textfield: BasePhoneField?
     
     var icSearch: UIImageView = {
         let imgView = UIImageView()
         imgView.contentMode = .scaleToFill
         imgView.translatesAutoresizingMaskIntoConstraints = false
-        imgView.image = UIImage(named: "search")?.withRenderingMode(.alwaysTemplate)
+        imgView.image = UIImage(named: "search", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         imgView.tintColor = .labelColor
         return imgView
     }()
@@ -71,40 +59,38 @@ class CountryPickerVC: BaseVC {
     private var allCountries: [Country] = []
     private var countries: [Country] = []
     var customDialCodes: [String] = []
-    var selectedCountry: Country?
+    var selectedCountryCode: String?
+    private var selectedCountry: Country?
     var filteredCountries: [Country] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = "Select Country"
+        
         populateData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        super.changeNavBarAppearance(isLightContent: false)
+    }
+    
     override func setupViews() {
-        self.view.backgroundColor = .littleBlackInverse
-        self.view.addSubview(navBar)
+        self.view.backgroundColor = .white
         self.view.addSubview(searchContainer)
         searchContainer.addSubview(icSearch)
         searchContainer.addSubview(tfSearch)
         self.view.addSubview(tableView)
         
-        let navItem = UINavigationItem()
-        let backImg = UIImage(named: "close")?.renderResizedImage(25)
+        let backImg = UIImage(named: "close", in: .module, compatibleWith: nil)?.renderResizedImage(20)
         let backItem = UIBarButtonItem(image: backImg, style: .plain, target: self, action: #selector(navBack))
-        navItem.leftBarButtonItem = backItem
-        navItem.title = "Select Country".localized().uppercased()
         
-        navBar.setItems([navItem], animated: false)
-        
-        if var textAttributes = navBar.titleTextAttributes {
-            textAttributes[NSAttributedString.Key.foregroundColor] = UIColor.littleWhite
-            navBar.titleTextAttributes = textAttributes
-        }
-        navBar.pinToView(parentView: self.view, bottom: false)
+        navigationItem.setLeftBarButton(backItem, animated: false)
         
         searchContainer.pinToView(parentView: self.view, constant: 15, top: false, bottom: false)
         
-        searchContainer.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 10).isActive = true
+        searchContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).activate()
         
         NSLayoutConstraint.activate([
             icSearch.leadingAnchor.constraint(equalTo: searchContainer.leadingAnchor, constant: 10),
@@ -179,16 +165,19 @@ extension CountryPickerVC: UITableViewDataSource {
         let item = self.filteredCountries[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CountryCell
         cell.selectionStyle = .default
-        cell.flagImg.image = UIImage(named: item.code.lowercased())
+        cell.flagImg.image = UIImage(named: item.code.lowercased(), in: .module, compatibleWith: nil)
                 
         cell.lblName.text = "\(item.name) (\(item.code.uppercased()))"
         cell.lblCode.text = "+\(item.dialCode)"
         
-        cell.checkIcon.image = UIImage(named: "circle")
+        cell.checkIcon.image = nil
+        
+        cell.hideCheckMark()
 
         if let selected = selectedCountry {
             if item.code.lowercased() == selected.code.lowercased() {
-                cell.checkIcon.image = UIImage(named: "check")
+                cell.checkIcon.image = UIImage(named: "success", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+                cell.showCheckMark()
             }
         }
         return cell
@@ -201,7 +190,8 @@ extension CountryPickerVC: UITableViewDataSource {
 extension CountryPickerVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let item = filteredCountries[indexPath.row]
-        self.delegate.onSelect(didSelectCountry: item)
+        self.delegate?.onSelect(didSelectCountry: item)
+        textfield?.setCountry(item)
         self.dismiss(animated: true)
     }
     
@@ -241,6 +231,10 @@ extension CountryPickerVC {
         }
         
         filteredCountries.append(contentsOf: countries)
+        
+        if let  selectedCountryCode = selectedCountryCode?.trimmingCharacters(in: .whitespacesAndNewlines), !selectedCountryCode.isEmpty {
+            selectedCountry = countries.filter({ $0.dialCode == selectedCountryCode }).first
+        }
         
         tableView.reloadData()
     }

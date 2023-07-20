@@ -1,4 +1,4 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.7.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -20,7 +20,11 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "JBTextfield",
-            dependencies: []),
+            dependencies: [],
+            resources: [
+                .process("Assets/countries.json")
+            ]
+        ),
         .testTarget(
             name: "JBTextfieldTests",
             dependencies: ["JBTextfield"]),

@@ -51,6 +51,9 @@ class CountryCell: UITableViewCell {
         return lbl
     }()
     
+    private var checkIconWidthConstraint: NSLayoutConstraint!
+    private var lblCodeTrailingConstraint: NSLayoutConstraint!
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setup()
@@ -71,14 +74,7 @@ class CountryCell: UITableViewCell {
         container.pinToView(parentView: self, constant: 0)
         
         NSLayoutConstraint.activate([
-            checkIcon.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            checkIcon.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-            checkIcon.heightAnchor.constraint(equalToConstant: 15),
-            checkIcon.widthAnchor.constraint(equalToConstant: 15)
-        ])
-        
-        NSLayoutConstraint.activate([
-            flagImg.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 10),
+            flagImg.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 0),
             flagImg.topAnchor.constraint(equalTo: container.topAnchor, constant: 15),
             flagImg.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -15),
             flagImg.heightAnchor.constraint(equalToConstant: 20)
@@ -92,10 +88,29 @@ class CountryCell: UITableViewCell {
             lblName.centerYAnchor.constraint(equalTo: flagImg.centerYAnchor)
         ])
         
+        lblCodeTrailingConstraint = lblCode.trailingAnchor.constraint(equalTo: checkIcon.leadingAnchor, constant: 0)
         NSLayoutConstraint.activate([
-            lblCode.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            lblCodeTrailingConstraint,
             lblCode.centerYAnchor.constraint(equalTo: flagImg.centerYAnchor),
             lblCode.widthAnchor.constraint(equalToConstant: 50)
         ])
+        
+        checkIconWidthConstraint = checkIcon.widthAnchor.constraint(equalToConstant: 0)
+        NSLayoutConstraint.activate([
+            checkIcon.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            checkIcon.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            checkIcon.heightAnchor.constraint(equalToConstant: 18),
+            checkIconWidthConstraint
+        ])
+    }
+    
+    func showCheckMark() {
+        lblCodeTrailingConstraint.constant = -15
+        checkIconWidthConstraint.constant = 18
+    }
+    
+    func hideCheckMark() {
+        lblCodeTrailingConstraint.constant = 0
+        checkIconWidthConstraint.constant = 0
     }
 }
