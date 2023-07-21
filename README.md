@@ -3,7 +3,7 @@
 Beautiful textfields & pickers for iOS
 
 ## Screenshots
-![Screenshot](JBTextfield.png)
+![Screenshot](JBTextfield.jpg)
 
 ## Usage
 
