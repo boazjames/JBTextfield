@@ -17,7 +17,18 @@ extension String {
         return String(String.UnicodeScalarView(filtredUnicodeScalars))
     }
     
-    public var localized: String {
+    var localized: String {
         return NSLocalizedString(self, tableName: "Localizable", bundle: .module, comment: "")
+    }
+    
+    func grouping(every groupSize: Int, with separator: Character) -> String {
+        let cleanedUpCopy = replacingOccurrences(of: String(separator), with: "")
+        return String(cleanedUpCopy.enumerated().map() {
+            $0.offset % groupSize == 0 ? [separator, $0.element] : [$0.element]
+        }.joined().dropFirst())
+    }
+    
+    func removeSpaces() -> String {
+        return self.replacingOccurrences(of: " ", with: "")
     }
 }
