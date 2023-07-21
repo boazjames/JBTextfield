@@ -15,8 +15,8 @@ public class BasePhoneField: UIView {
     var labelHeightConstraint: NSLayoutConstraint!
     var countryCodeConstraint: NSLayoutConstraint!
     
-    @IBInspectable public var labelText = "Phone number"
-    @IBInspectable public var placehodler = "Phone number"
+    @IBInspectable public var labelText = "phone_no".localized
+    @IBInspectable public var placehodler = "phone_no".localized
     
     public var text: String {
         return textfield.text ?? ""
@@ -300,7 +300,7 @@ public class BasePhoneField: UIView {
     
     public func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : .clear
+        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
     

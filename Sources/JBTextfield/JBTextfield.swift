@@ -361,8 +361,8 @@ public class JBTextfield: BaseTextfield {
     
     public override func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : .clear
-        icon.tintColor = textfield.isFirstResponder ? highlightColor : .clear
+        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        icon.tintColor = textfield.isFirstResponder ? highlightColor : .labelColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
     

@@ -66,7 +66,7 @@ class CountryPickerVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "Select Country"
+        self.title = "select_country".localized
         
         populateData()
     }
@@ -213,7 +213,7 @@ protocol CountryPickerDelegate {
 
 extension CountryPickerVC {
     private func populateData() {
-        let path = Bundle.module.path(forResource: "countries", ofType: "json")!
+        guard let path = Bundle.module.path(forResource: "countries", ofType: "json") else { return }
         let jsonString = (try? String(contentsOfFile: path, encoding: String.Encoding.utf8)) ?? ""
         let data = Data(jsonString.utf8)
         allCountries = (try? JSONDecoder().decode([Country].self, from: data)) ?? []
