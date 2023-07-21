@@ -1,6 +1,6 @@
 # JBTextfield
 
-Beautiful textfields for iOS
+Beautiful textfields & pickers for iOS
 
 ## Screenshots
 ![Screenshot](JBTextfield.png)
