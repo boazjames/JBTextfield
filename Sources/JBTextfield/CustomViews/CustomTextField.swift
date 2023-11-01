@@ -8,7 +8,7 @@
 import UIKit
 
 @IBDesignable
-class CustomTextField: UITextField {
+public class CustomTextField: UITextField {
     @IBInspectable var isPasteEnabled: Bool = true
     
     @IBInspectable var isSelectEnabled: Bool = true
@@ -28,17 +28,17 @@ class CustomTextField: UITextField {
         right: 10
     )
     
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
         return rect.inset(by: textPadding)
     }
     
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.editingRect(forBounds: bounds)
         return rect.inset(by: textPadding)
     }
     
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    public override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
         switch action {
         case #selector(UIResponderStandardEditActions.paste(_:)) where !isPasteEnabled,
             #selector(UIResponderStandardEditActions.select(_:)) where !isSelectEnabled,

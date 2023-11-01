@@ -157,7 +157,7 @@ public class BaseTextfield: UIView {
         return view
     }()
     
-    var textfield: TextFieldWithPadding = {
+    public var textfield: TextFieldWithPadding = {
         let textField = TextFieldWithPadding()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textAlignment = .left

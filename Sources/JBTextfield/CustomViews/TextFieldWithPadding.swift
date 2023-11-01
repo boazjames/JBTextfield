@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TextFieldWithPadding: UITextField {
+public class TextFieldWithPadding: UITextField {
     var textPadding = UIEdgeInsets(
         top: 10,
         left: 10,
@@ -15,12 +15,12 @@ class TextFieldWithPadding: UITextField {
         right: 10
     )
 
-    override func textRect(forBounds bounds: CGRect) -> CGRect {
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.textRect(forBounds: bounds)
         return rect.inset(by: textPadding)
     }
 
-    override func editingRect(forBounds bounds: CGRect) -> CGRect {
+    public override func editingRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.editingRect(forBounds: bounds)
         return rect.inset(by: textPadding)
     }

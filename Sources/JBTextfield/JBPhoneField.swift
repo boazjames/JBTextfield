@@ -160,7 +160,7 @@ public class BasePhoneField: UIView {
         return view
     }()
     
-    var textfield: TextFieldWithPadding = {
+    public var textfield: TextFieldWithPadding = {
         let textField = TextFieldWithPadding()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.textColor = .labelColor

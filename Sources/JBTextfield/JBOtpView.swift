@@ -7,9 +7,9 @@
 
 import UIKit
 
-class OtpTextField: CustomTextField {
+public class OtpTextField: CustomTextField {
     
-    var customDelegate: MyTextFieldDelegate?
+    public var customDelegate: MyTextFieldDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -46,7 +46,7 @@ class OtpTextField: CustomTextField {
         self.isDeleteEnabled = false
     }
     
-    override func deleteBackward() {
+    public override func deleteBackward() {
         let wasEmpty = text == nil || text!.isEmpty
                 
         self.text = ""
@@ -130,7 +130,7 @@ class OtpView: UIView {
     }
 }
 
-protocol MyTextFieldDelegate: UITextFieldDelegate {
+public protocol MyTextFieldDelegate: UITextFieldDelegate {
     func textField(_ textField: UITextField, didDeleteBackwardAnd wasEmpty: Bool)
 }
 
@@ -421,7 +421,7 @@ extension JBOtpEntryView: UITextFieldDelegate {
 }
 
 extension JBOtpEntryView: MyTextFieldDelegate {
-    func textField(_ textField: UITextField, didDeleteBackwardAnd wasEmpty: Bool) {
+    public func textField(_ textField: UITextField, didDeleteBackwardAnd wasEmpty: Bool) {
         
         if wasEmpty {
             let tag = textField.tag
