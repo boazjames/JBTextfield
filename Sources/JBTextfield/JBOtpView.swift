@@ -136,7 +136,7 @@ public protocol MyTextFieldDelegate: UITextFieldDelegate {
 
 @IBDesignable
 public class JBOtpEntryView: UIStackView {
-    var delegate: OtpEntryDelegate?
+    public var delegate: OtpEntryDelegate?
     
     @IBInspectable public var enableUserInteraction = true {
         didSet {
@@ -180,7 +180,7 @@ public class JBOtpEntryView: UIStackView {
         setupOtpViews()
     }
     
-    init(length: Int = 4, interItemSpacing: CGFloat = 20, enableUserInteraction: Bool = true) {
+    public init(length: Int = 4, interItemSpacing: CGFloat = 20, enableUserInteraction: Bool = true) {
         super.init(frame: CGRect.zero)
         self.length = length
         self.interItemSpacing = interItemSpacing
@@ -227,7 +227,7 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
-    func setText(text: String) {
+    public func setText(text: String) {
         self.endEditing(true)
         
         self.text = text
@@ -250,7 +250,7 @@ public class JBOtpEntryView: UIStackView {
         setupTextAppearance()
     }
     
-    func addText(char: Character) {
+    public func addText(char: Character) {
         if self.text.count > self.length {
             return
         }
@@ -264,7 +264,7 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
-    func clearText() {
+    public func clearText() {
         if !text.isEmpty {
             self.text = ""
             otpViews.forEach { view in
@@ -275,7 +275,7 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
-    func deleteLastChar() {
+    public func deleteLastChar() {
         if !text.isEmpty {
             if text.count == 0 {
                 text = ""
@@ -289,7 +289,7 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
-    @objc func textFieldDidChange(_ textField: UITextField) {
+    @objc private func textFieldDidChange(_ textField: UITextField) {
         text = ""
         otpViews.forEach { otpView in
             if let txt = otpView.text {
@@ -333,7 +333,7 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
-    func setTintColor(color: UIColor) {
+    public func setTintColor(color: UIColor) {
         otpViews.forEach { otpView in
             otpView.textField.tintColor = color
         }
