@@ -144,7 +144,7 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
-    private(set) var text = "" {
+    public private(set) var text = "" {
         didSet {
             if text.count == length {
                 self.endEditing(true)
