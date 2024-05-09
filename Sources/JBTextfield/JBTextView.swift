@@ -198,7 +198,6 @@ public class JBTextView: TextView {
         self.addSubview(lblError)
         
         mainContainerView.pinToView(parentView: self, bottom: false)
-        mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
         
         containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
