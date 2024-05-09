@@ -29,7 +29,7 @@ public class TextView: UIView {
 }
 
 
-public class MyTextView: TextView {
+public class JBTextView: TextView {
     
     public var isEmpty = true
     
@@ -317,7 +317,7 @@ public class MyTextView: TextView {
 }
 
 // Mark: UITextViewDelegate
-extension MyTextView: UITextViewDelegate {
+extension JBTextView: UITextViewDelegate {
     public func textViewDidBeginEditing(_ textView: UITextView) {
         label.textColor = highlightColor
         secondaryLabel.textColor = highlightColor
