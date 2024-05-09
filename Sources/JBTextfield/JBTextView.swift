@@ -91,12 +91,6 @@ public class JBTextView: TextView {
         }
     }
     
-    @IBInspectable public var secondaryLabelFont: UIFont = UIFont.systemFont(ofSize: 16) {
-        didSet {
-            secondaryLabel.font = secondaryLabelFont
-        }
-    }
-    
     @IBInspectable public var keyboardType: UIKeyboardType = UIKeyboardType.default {
         didSet {
             textfield.keyboardType = keyboardType
@@ -170,19 +164,6 @@ public class JBTextView: TextView {
         return view
     }()
     
-    let secondaryLabel: PaddingLabel = {
-        let view = PaddingLabel()
-        view.backgroundColor = .clear
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.textAlignment = .left
-        view.numberOfLines = 0
-        view.leftInset = 0
-        view.rightInset = 0
-        view.topInset = 0
-        view.bottomInset = 0
-        return view
-    }()
-    
     private var labelHeightConstraint: NSLayoutConstraint!
     
     override func setupView() {
@@ -199,8 +180,7 @@ public class JBTextView: TextView {
         
         mainContainerView.pinToView(parentView: self, bottom: false)
         
-        containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
-        containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
+        containerView.pinToView(parentView: mainContainerView)
         
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
         NSLayoutConstraint.activate([
@@ -231,11 +211,9 @@ public class JBTextView: TextView {
         if errorMessage.isEmpty {
             mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
-            secondaryLabel.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
             mainContainerView.borderColor = errorColor
             label.textColor = errorColor
-            secondaryLabel.textColor = errorColor
         }
         
         lblError.textColor = errorColor
@@ -319,7 +297,6 @@ public class JBTextView: TextView {
 extension JBTextView: UITextViewDelegate {
     public func textViewDidBeginEditing(_ textView: UITextView) {
         label.textColor = highlightColor
-        secondaryLabel.textColor = highlightColor
         mainContainerView.borderColor = highlightColor
         
         if self.isEmpty {
@@ -332,7 +309,6 @@ extension JBTextView: UITextViewDelegate {
     
     public func textViewDidEndEditing(_ textView: UITextView) {
         label.textColor = labelColor
-        secondaryLabel.textColor = labelColor
         mainContainerView.borderColor = strokeColor
         
         if self.isEmpty {
