@@ -10,7 +10,7 @@ import UIKit
 public class BasePhoneField: UIView {
     var isDeleting = false
     
-    @IBInspectable public var maxLength = 10
+    @IBInspectable public var maxLength = 12
     
     var labelHeightConstraint: NSLayoutConstraint!
     var countryCodeConstraint: NSLayoutConstraint!
@@ -91,8 +91,22 @@ public class BasePhoneField: UIView {
     }
     
     var customDialCodes = [String]()
-    var selectedCountry = Country(name: "Kenya", code: "KE", dialCode: "254")
+    public var selectedCountry = Country(name: "Kenya", code: "KE", dialCode: "254")
     var selectedCountryCode = "254"
+    
+    public var fullPhoneNo: String {
+        var phoneNo = textfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        
+        if phoneNo.starts(with: "0") {
+            phoneNo.removeFirst()
+        }
+        
+        return "\(selectedCountry.dialCode)\(phoneNo)"
+    }
+    
+    public var fullPhoneNoWithPlus: String {
+        return "+\(fullPhoneNo)"
+    }
     
     var mainContainerView: UIView = {
         let view = UIView()
