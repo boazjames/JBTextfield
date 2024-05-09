@@ -384,5 +384,7 @@ extension JBTextView: UITextViewDelegate {
         } else {
             self.isEmpty = true
         }
+        
+        hideError()
     }
 }
