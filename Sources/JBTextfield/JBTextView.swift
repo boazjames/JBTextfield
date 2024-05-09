@@ -172,6 +172,10 @@ public class JBTextView: TextView {
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = keyboardType
         
+        label.font = labelFont
+        textfield.font = textfieldFont
+        lblError.font = errorLabelFont
+        
         self.addSubview(mainContainerView)
         mainContainerView.addSubview(containerView)
         containerView.addSubview(textfield)
@@ -184,9 +188,9 @@ public class JBTextView: TextView {
         
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 5),
+            label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 5),
+            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -5),
             labelHeightConstraint
         ])
         
