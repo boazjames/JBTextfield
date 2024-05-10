@@ -427,7 +427,7 @@ public class JBPhoneField: BasePhoneField {
         }
     }
     
-    func setText(_ text: String) {
+    public func setText(_ text: String) {
         if text.isEmpty {
             textfield.text = text
             label.textColor = .secondaryLabelColor
