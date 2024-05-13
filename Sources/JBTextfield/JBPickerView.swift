@@ -347,7 +347,7 @@ public class JBDatePickerView: BasePickerView {
     override func setupViews() {
         super.setupViews()
         
-        pickerIcon.image = UIImage(named: "calendar", in: .module, compatibleWith: nil)
+        pickerIcon.image = UIImage(named: "calendar", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         
         mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
