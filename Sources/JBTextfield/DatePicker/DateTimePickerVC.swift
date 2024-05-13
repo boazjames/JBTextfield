@@ -192,6 +192,7 @@ class DateTimePickerVC: BaseVC {
     
     @objc private func selectionDone() {
         sourceView?.setText(self.pickerView.date.formatDate(formatString: dateDispalyFormat), value: self.pickerView.date.formatDate(formatString: dateValueFormat))
+        sourceView?.date = pickerView.date
         self.dismiss(animated: false) {
             self.delegate?.didSelect(didSelectDate: self.pickerView.date, sourceView: self.sourceView)
         }

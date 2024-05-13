@@ -116,7 +116,7 @@ public class BasePickerView: UIView {
         imgView.contentMode = .scaleToFill
         imgView.translatesAutoresizingMaskIntoConstraints = false
         imgView.image = UIImage(named: "chevron_down", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-        imgView.tintColor = .black
+        imgView.tintColor = .labelColor
         return imgView
     }()
     
@@ -124,7 +124,7 @@ public class BasePickerView: UIView {
         let view = UIImageView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.tintColor = .black
+        view.tintColor = .labelColor
         view.applyAspectRatio(aspectRation: 1)
         return view
     }()
