@@ -342,6 +342,7 @@ public class JBDatePickerView: BasePickerView {
     public var datePickerMode: UIDatePicker.Mode = .date
     public var dateDispalyFormat: String = "dd MMM yyyy"
     public var dateValueFormat: String = "yyyy-MM-dd"
+    public var delegate: DateTimePickerDelegate?
     
     override func setupViews() {
         super.setupViews()
@@ -464,6 +465,7 @@ public class JBDatePickerView: BasePickerView {
         vc.datePickerMode = datePickerMode
         vc.dateDispalyFormat = dateDispalyFormat
         vc.dateValueFormat = dateValueFormat
+        vc.delegate = delegate
         
         vc.modalPresentationStyle = .overCurrentContext
         vc.modalTransitionStyle = .coverVertical
