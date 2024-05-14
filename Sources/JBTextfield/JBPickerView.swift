@@ -471,4 +471,9 @@ public class JBDatePickerView: BasePickerView {
         vc.modalTransitionStyle = .coverVertical
         parentVC.present(vc, animated: true)
     }
+    
+    public func setDate(date: Date) {
+        self.date = date
+        self.setText(date.formatDate(formatString: dateDispalyFormat), value: date.formatDate(formatString: dateValueFormat))
+    }
 }
