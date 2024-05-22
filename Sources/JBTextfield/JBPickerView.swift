@@ -107,6 +107,7 @@ public class BasePickerView: UIView {
         view.topInset = 0
         view.bottomInset = 0
         view.rightInset = 40
+        view.numberOfLines = 0
         
         return view
     }()
@@ -221,13 +222,16 @@ public class JBPickerView: BasePickerView {
         self.addSubview(lblError)
         
         mainContainerView.pinToView(parentView: self, bottom: false)
-        mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
         
         containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
-        containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: mainContainerView.topAnchor, constant: 8),
+            containerView.bottomAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: -8),
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+        ])
         
         NSLayoutConstraint.activate([
-            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
             placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
             placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
         ])
@@ -235,8 +239,7 @@ public class JBPickerView: BasePickerView {
         labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
         label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
         NSLayoutConstraint.activate([
-            label.heightAnchor.constraint(equalToConstant: 40),
-            label.topAnchor.constraint(equalTo: placeHolderLabel.centerYAnchor),
+            label.topAnchor.constraint(equalTo: placeHolderLabel.bottomAnchor),
             label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             labelHeightConstraint
         ])
