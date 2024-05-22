@@ -63,6 +63,7 @@ public class BasePickerView: UIView {
     }
     
     var labelHeightConstraint: NSLayoutConstraint!
+    var labelTopConstraint: NSLayoutConstraint!
     
     var mainContainerView: UIView = {
         let view = UIView()
@@ -225,22 +226,23 @@ public class JBPickerView: BasePickerView {
         
         containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
         NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: mainContainerView.topAnchor, constant: 8),
-            containerView.bottomAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: -8),
-            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+            containerView.topAnchor.constraint(equalTo: mainContainerView.topAnchor, constant: 0),
+            containerView.bottomAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 0),
+            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 60)
         ])
         
         NSLayoutConstraint.activate([
-            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 0),
+            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
             placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
             placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
         ])
         
         labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
+        labelTopConstraint = label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 15)
         label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: placeHolderLabel.bottomAnchor),
-            label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            labelTopConstraint,
+            label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
             labelHeightConstraint
         ])
         
@@ -288,6 +290,7 @@ public class JBPickerView: BasePickerView {
     }
     
     private func showLabel() {
+        labelTopConstraint.constant = 25
         self.layoutIfNeeded()
         let originY = label.frame.origin.y
         let distance: CGFloat = 20
@@ -302,6 +305,7 @@ public class JBPickerView: BasePickerView {
     }
     
     private func hideLabel() {
+        labelTopConstraint.constant = 15
         UIView.animate(withDuration: 0.3) {
             self.labelHeightConstraint.activate()
             self.layoutIfNeeded()
