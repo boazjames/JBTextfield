@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct PickerItem {
+public struct JBPickerItem {
     var title: String
     var value: String
     

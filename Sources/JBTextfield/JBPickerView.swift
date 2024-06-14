@@ -205,8 +205,8 @@ public class BasePickerView: UIView {
 
 @IBDesignable
 public class JBPickerView: BasePickerView {
-    public var items = [PickerItem]()
-    public var actionButtonClosure:  ((_ index: Int, _ item: PickerItem) -> Void)?
+    public var items = [JBPickerItem]()
+    public var actionButtonClosure:  ((_ index: Int, _ item: JBPickerItem) -> Void)?
     
     override func setupViews() {
         super.setupViews()
