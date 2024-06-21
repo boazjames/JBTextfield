@@ -31,6 +31,18 @@ extension String {
     func removeSpaces() -> String {
         return self.replacingOccurrences(of: " ", with: "")
     }
+    
+    func containsIgnoringCase(_ string: String) -> Bool {
+        if let _ = self.range(of: string, options: .caseInsensitive) {
+            return true
+        }
+        
+        return false
+    }
+    
+    func equalsIgnoringCase(_ string: String) -> Bool {
+        return self.caseInsensitiveCompare(string) == .orderedSame
+    }
 }
 
 extension StringProtocol {

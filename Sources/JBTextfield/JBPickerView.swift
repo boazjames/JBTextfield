@@ -206,7 +206,11 @@ public class BasePickerView: UIView {
 @IBDesignable
 public class JBPickerView: BasePickerView {
     public var items = [JBPickerItem]()
+    private var selectedItems = [JBPickerItem]()
     public var actionButtonClosure:  ((_ index: Int, _ item: JBPickerItem) -> Void)?
+    public var multiActionButtonClosure:  ((_ indices: [Int], _ items: [JBPickerItem]) -> Void)?
+    public var allowMultipleSelection = false
+    public var maxSelection = 0
     
     override func setupViews() {
         super.setupViews()
@@ -313,6 +317,11 @@ public class JBPickerView: BasePickerView {
     }
     
     @objc private func showActionPicker() {
+        if allowMultipleSelection {
+            showMultiActionPicker()
+            return
+        }
+        
         guard let vc = findViewController() else { return }
         vc.view.endEditing(true)
         if !items.isEmpty {
@@ -336,6 +345,26 @@ public class JBPickerView: BasePickerView {
                 alertVC.popoverPresentationController?.sourceRect = CGRect(x: self.bounds.size.width / 6.0, y: self.bounds.size.height / 2.0, width: 1.0, height: 1.0)
             }
             vc.present(alertVC, animated: true)
+        }
+    }
+    
+    @objc private func showMultiActionPicker() {
+        guard let parentVc = findViewController() else { return }
+        parentVc.view.endEditing(true)
+        if !items.isEmpty {
+            let vc = MultipleSelectionVC()
+            vc.completionHandler = { (indices, items) in
+                self.multiActionButtonClosure?(indices, items)
+            }
+            vc.items = items
+            vc.pickerTitle = labelText
+            vc.selectedItems = selectedItems
+            vc.maxSelection = maxSelection
+            
+            let navVc = UINavigationController(rootViewController: vc)
+            navVc.modalPresentationStyle = .fullScreen
+            navVc.modalTransitionStyle = .coverVertical
+            parentVc.present(navVc, animated: true)
         }
     }
 }

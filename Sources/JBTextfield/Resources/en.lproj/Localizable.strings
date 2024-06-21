@@ -10,3 +10,6 @@
 "select_country" = "Select Country";
 "dismiss" = "Dismiss";
 "done" = "Done";
+"Select %@" = "Select %@";
+"You can select upto %d %@" = "You can select upto %d %@";
+"Search %@" = "Search %@";
