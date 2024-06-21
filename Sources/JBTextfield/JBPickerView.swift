@@ -354,6 +354,8 @@ public class JBPickerView: BasePickerView {
         if !items.isEmpty {
             let vc = MultipleSelectionVC()
             vc.completionHandler = { (indices, items) in
+                self.selectedItems = items
+                self.setupMultiSelectText()
                 self.multiActionButtonClosure?(indices, items)
             }
             vc.items = items
@@ -366,6 +368,11 @@ public class JBPickerView: BasePickerView {
             navVc.modalTransitionStyle = .coverVertical
             parentVc.present(navVc, animated: true)
         }
+    }
+    
+    private func setupMultiSelectText() {
+        let text = selectedItems.map({ "✦ \($0.title)" }).joined(separator: "\n")
+        setText(text, value: "")
     }
 }
 

@@ -44,7 +44,6 @@ class MultipleSelectionCell: UITableViewCell {
     
     private func setup() {
         self.backgroundColor = .clear
-        self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         self.contentView.addSubview(container)
         container.addSubview(lblTitle)
@@ -54,7 +53,7 @@ class MultipleSelectionCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             lblTitle.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            lblTitle.trailingAnchor.constraint(equalTo: imgCheck.trailingAnchor, constant: -10),
+            lblTitle.trailingAnchor.constraint(equalTo: imgCheck.leadingAnchor, constant: -10),
             lblTitle.topAnchor.constraint(equalTo: container.topAnchor, constant: 20),
             lblTitle.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -20),
         ])
@@ -74,7 +73,7 @@ class MultipleSelectionCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         if selected {
-            imgCheck.image = UIImage(named: "success")?.withRenderingMode(.alwaysTemplate)
+            imgCheck.image = UIImage(named: "success", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         } else {
             imgCheck.image = nil
         }

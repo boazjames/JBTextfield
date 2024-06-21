@@ -106,7 +106,7 @@ class MultipleSelectionVC: BaseVC {
         let safeAreaLayoutGuide = view.safeAreaLayoutGuide
         
         NSLayoutConstraint.activate([
-            tblView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            tblView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             tblView.bottomAnchor.constraint(equalTo: buttonContainer.topAnchor, constant: 0),
             tblView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 15),
             tblView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -15),
