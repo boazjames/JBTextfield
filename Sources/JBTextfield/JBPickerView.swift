@@ -374,6 +374,11 @@ public class JBPickerView: BasePickerView {
         let text = selectedItems.map({ "✦ \($0.title)" }).joined(separator: "\n")
         setText(text, value: "")
     }
+    
+    public func setSelectedItems(_ items: [JBPickerItem]) {
+        self.selectedItems = items
+        self.setupMultiSelectText()
+    }
 }
 
 @IBDesignable
