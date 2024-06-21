@@ -79,4 +79,12 @@ extension UIColor {
         
         return UIColor(named: "ColorSkyBlueLight", in: Bundle.module, compatibleWith: nil)!
     }
+    
+    static var whiteColor: UIColor {
+        if let color = UIColor(named: "ColorWhite", in: Bundle.main, compatibleWith: nil) {
+            return color
+        }
+        
+        return UIColor(named: "ColorWhite", in: Bundle.module, compatibleWith: nil)!
+    }
 }

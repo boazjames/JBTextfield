@@ -80,6 +80,7 @@ class MultipleSelectionVC: BaseVC {
         super.viewDidLoad()
                 
         setupData()
+        setupSearch()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -96,10 +97,17 @@ class MultipleSelectionVC: BaseVC {
     }
     
     override func setupViews() {
-        self.view.backgroundColor = .backgroundColor
+        if #available(iOS 13.0, *) {
+            self.view.backgroundColor = .systemBackground
+        } else {
+            self.view.backgroundColor = .backgroundColor
+        }
         self.view.addSubview(tblView)
         self.view.addSubview(buttonContainer)
         buttonContainer.addSubview(btnSubmit)
+        
+        let btnItem = UIBarButtonItem(image: UIImage(named: "close", in: .module, compatibleWith: nil)?.renderResizedImage(25)?.withRenderingMode(.alwaysTemplate), style: .plain, target: self, action: #selector(dismissViewController))
+        self.navigationItem.rightBarButtonItem = btnItem
     }
     
     override func setupSharedContraints() {
@@ -141,7 +149,12 @@ class MultipleSelectionVC: BaseVC {
         let selectedRows = tblView.indexPathsForSelectedRows ?? []
         
         let selectedItems = selectedRows.map({ filteredItems[$0.row] })
-        let selectedIndices = selectedRows.map({ $0.row })
+        let selectedIndices = selectedItems.map({ item in items.firstIndex(where: { $0.value == item.value }) ?? 0 })
+        
+        if let presentedViewController = presentedViewController {
+            presentedViewController.dismiss(animated: false)
+        }
+        
         completionHandler?(selectedIndices, selectedItems)
         self.dismiss(animated: true)
     }
@@ -180,13 +193,13 @@ class MultipleSelectionVC: BaseVC {
         self.searchController.extendedLayoutIncludesOpaqueBars = true
         
         self.searchController.searchBar.backgroundColor = .clear
-        self.searchController.searchBar.barTintColor = .highlightColor
-        self.searchController.searchBar.tintColor = .highlightColor
+        self.searchController.searchBar.barTintColor = .whiteColor
+        self.searchController.searchBar.tintColor = .whiteColor
         self.searchController.searchBar.searchBarStyle = .minimal
         if #available(iOS 13.0, *) {
             self.searchController.searchBar.searchTextField.textColor = .labelColor
-            self.searchController.searchBar.searchTextField.backgroundColor = .skyBlueLightColor
-            self.searchController.searchBar.searchTextField.tintColor = .highlightColor
+            self.searchController.searchBar.searchTextField.backgroundColor = .systemBackground
+            self.searchController.searchBar.searchTextField.tintColor = .whiteColor
         }
     }
     
