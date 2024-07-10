@@ -293,7 +293,7 @@ public class JBCheckboxView: UIView {
         view.isEditable = false
         view.isScrollEnabled = false
         view.backgroundColor = .clear
-        view.isSelectable = false
+        view.isSelectable = true
         view.dataDetectorTypes = .link
         return view
     }()
