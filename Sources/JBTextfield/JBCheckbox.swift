@@ -53,9 +53,9 @@ public class JBCheckbox: UIControl {
     
     public var checkboxBackgroundColor: UIColor! = .backgroundColor
     
-    var unCheckedBackgroundColor: UIColor! = .clear
+    public var unCheckedBackgroundColor: UIColor! = .clear
     
-    var checkedBackgroundColor: UIColor! = .highlightColor
+    public var checkedBackgroundColor: UIColor! = .highlightColor
     
     // Used to increase the touchable are for the component
     public var increasedTouchRadius: CGFloat = 5
