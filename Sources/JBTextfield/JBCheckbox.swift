@@ -53,6 +53,10 @@ public class JBCheckbox: UIControl {
     
     public var checkboxBackgroundColor: UIColor! = .backgroundColor
     
+    var unCheckedBackgroundColor: UIColor! = .clear
+    
+    var checkedBackgroundColor: UIColor! = .highlightColor
+    
     // Used to increase the touchable are for the component
     public var increasedTouchRadius: CGFloat = 5
     
@@ -60,7 +64,8 @@ public class JBCheckbox: UIControl {
     
     @IBInspectable
     public var isChecked: Bool = false {
-        didSet{
+        didSet {
+            self.backgroundColor = isChecked ? checkedBackgroundColor : unCheckedBackgroundColor
             self.setNeedsDisplay()
         }
     }
@@ -81,7 +86,7 @@ public class JBCheckbox: UIControl {
     
     private func setupViews() {
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.backgroundColor = .clear
+        self.backgroundColor = unCheckedBackgroundColor
         
     }
     
@@ -257,7 +262,7 @@ public class JBCheckboxView: UIView {
         return checkBox.isChecked
     }
     
-    public var title: String? {
+    @IBInspectable public var title: String? {
         didSet {
             textView.text = title
         }
