@@ -62,6 +62,12 @@ public class BasePickerView: UIView {
         }
     }
     
+    @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
+        didSet {
+            mainContainerView.backgroundColor = boxBackgroundColor
+        }
+    }
+    
     var labelHeightConstraint: NSLayoutConstraint!
     var labelTopConstraint: NSLayoutConstraint!
     
@@ -170,6 +176,7 @@ public class BasePickerView: UIView {
         label.font = textFont
         placeHolderLabel.font = labelFont
         lblError.font = errorLabelFont
+        mainContainerView.backgroundColor = boxBackgroundColor
     }
     
     public func showError(_ message: String) {
@@ -215,7 +222,6 @@ public class JBPickerView: BasePickerView {
     override func setupViews() {
         super.setupViews()
         
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         
@@ -397,7 +403,6 @@ public class JBDatePickerView: BasePickerView {
         
         pickerIcon.image = UIImage(named: "calendar", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
         
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         

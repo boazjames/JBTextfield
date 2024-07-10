@@ -100,6 +100,12 @@ public class BaseTextfield: UIView {
         }
     }
     
+    @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
+        didSet {
+            mainContainerView.backgroundColor = boxBackgroundColor
+        }
+    }
+    
     var mainContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -251,7 +257,6 @@ public class JBTextfield: BaseTextfield {
     override func setupView() {
         super.setupView()
         
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = keyboardType
@@ -474,7 +479,6 @@ public class JBAmountTextfield: BaseTextfield {
         
         secondaryLabel.text = currency
         
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = .numberPad
@@ -703,7 +707,6 @@ public class JBCreditCardTextfield: BaseTextfield {
         
         textfield.textContentType = .creditCardNumber
         
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = .numberPad

@@ -18,6 +18,12 @@ public class BasePhoneField: UIView {
     @IBInspectable public var labelText = "phone_no".localized
     @IBInspectable public var placehodler = "phone_no".localized
     
+    @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
+        didSet {
+            mainContainerView.backgroundColor = boxBackgroundColor
+        }
+    }
+    
     public var text: String {
         return textfield.text ?? ""
     }
@@ -224,6 +230,7 @@ public class BasePhoneField: UIView {
     }
     
     func setupView() {
+        mainContainerView.backgroundColor = boxBackgroundColor
         label.font = labelFont
         textfield.font = textfieldFont
         lblError.font = errorLabelFont
@@ -333,7 +340,6 @@ public class JBPhoneField: BasePhoneField {
     override func setupView() {
         super.setupView()
         
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         

@@ -98,6 +98,12 @@ public class JBTextView: TextView {
         }
     }
     
+    @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
+        didSet {
+            mainContainerView.backgroundColor = boxBackgroundColor
+        }
+    }
+    
     public private(set) var placeholder = ""
     public private(set) var text = ""
     
@@ -167,7 +173,7 @@ public class JBTextView: TextView {
     private var labelHeightConstraint: NSLayoutConstraint!
     
     override func setupView() {
-        mainContainerView.backgroundColor = .textFieldBackgroundColor
+        mainContainerView.backgroundColor = boxBackgroundColor
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = keyboardType
