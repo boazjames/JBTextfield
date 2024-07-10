@@ -34,8 +34,8 @@ public class JBCheckbox: UIControl {
         case rounded
     }
     
-    public var style: Style = .circle
-    public var borderStyle: BorderStyle = .roundedSquare(radius: 8)
+    public var style: Style = .tick
+    public var borderStyle: BorderStyle = .roundedSquare(radius: 3)
     
     @IBInspectable
     public var checkBoxBorderWidth: CGFloat = 1.75
@@ -86,6 +86,8 @@ public class JBCheckbox: UIControl {
     
     private func setupViews() {
         self.translatesAutoresizingMaskIntoConstraints = false
+        self.layer.cornerRadius = 3
+        self.clipsToBounds = true
         self.backgroundColor = unCheckedBackgroundColor
         
     }
