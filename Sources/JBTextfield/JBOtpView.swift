@@ -328,16 +328,16 @@ public class JBOtpEntryView: UIStackView {
             guard let otpText = otpView.text else {return}
             if otpText.isEmpty {
                 otpView.layer.borderColor = UIColor.strokeColor.cgColor
-                otpView.backgroundColor = .clear
+//                otpView.backgroundColor = .clear
             } else {
                 otpView.layer.borderColor = UIColor.strokeColor.cgColor
-                otpView.backgroundColor = .clear
+//                otpView.backgroundColor = .clear
             }
         }
         
         if self.text.count < self.length {
             self.otpViews[self.text.count].layer.borderColor = UIColor.highlightColor.cgColor
-            self.otpViews[self.text.count].backgroundColor = UIColor.clear
+//            self.otpViews[self.text.count].backgroundColor = UIColor.clear
         }
     }
     
@@ -382,7 +382,7 @@ extension JBOtpEntryView: UITextFieldDelegate {
     
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         self.otpViews[textField.tag].layer.borderColor = UIColor.highlightColor.cgColor
-        self.otpViews[textField.tag].backgroundColor = UIColor.clear
+//        self.otpViews[textField.tag].backgroundColor = UIColor.clear
 //        if let selectedRange = textField.selectedTextRange {
 //
 //            let cursorPosition = textField.offset(from: textField.beginningOfDocument, to: selectedRange.start)
@@ -399,10 +399,10 @@ extension JBOtpEntryView: UITextFieldDelegate {
         
         if text.isEmpty {
             self.otpViews[textField.tag].layer.borderColor = UIColor.strokeColor.cgColor
-            self.otpViews[textField.tag].backgroundColor = .clear
+//            self.otpViews[textField.tag].backgroundColor = .clear
         } else {
             self.otpViews[textField.tag].layer.borderColor = UIColor.strokeColor.cgColor
-            self.otpViews[textField.tag].backgroundColor = .clear
+//            self.otpViews[textField.tag].backgroundColor = .clear
         }
     }
     
