@@ -165,6 +165,12 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
+    @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
+        didSet {
+            setupOtpViews()
+        }
+    }
+    
     private var otpViews: [OtpView] = []
     
     override init(frame: CGRect) {
@@ -180,10 +186,11 @@ public class JBOtpEntryView: UIStackView {
         setupOtpViews()
     }
     
-    public init(length: Int = 4, interItemSpacing: CGFloat = 20, enableUserInteraction: Bool = true) {
+    public init(length: Int = 4, interItemSpacing: CGFloat = 20, enableUserInteraction: Bool = true, boxBackgroundColor: UIColor) {
         super.init(frame: CGRect.zero)
         self.length = length
         self.interItemSpacing = interItemSpacing
+        self.boxBackgroundColor = boxBackgroundColor
         setup()
         setupOtpViews()
     }
@@ -205,6 +212,7 @@ public class JBOtpEntryView: UIStackView {
         
         ( 0...(length - 1)).forEach { idx in
             let otpView = OtpView()
+            otpView.backgroundColor = boxBackgroundColor
             otpView.overlayView.isUserInteractionEnabled = enableUserInteraction
             otpView.textField.isUserInteractionEnabled = enableUserInteraction
             otpView.textField.customDelegate = self
