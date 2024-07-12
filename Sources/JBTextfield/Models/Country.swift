@@ -8,9 +8,9 @@
 import Foundation
 
 public struct Country: Decodable {
-    var name: String
-    var code: String
-    var dialCode: String
+    public var name: String
+    public var code: String
+    public var dialCode: String
     
     init(name: String, code: String, dialCode: String) {
         self.name = name
