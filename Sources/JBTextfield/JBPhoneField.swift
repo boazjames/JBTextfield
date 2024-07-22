@@ -103,11 +103,19 @@ public class BasePhoneField: UIView {
     public var fullPhoneNo: String {
         var phoneNo = textfield.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         
+        let dialCode = selectedCountry.dialCode
+        
         if phoneNo.starts(with: "0") {
             phoneNo.removeFirst()
+            
+            return "\(dialCode)\(phoneNo)"
         }
         
-        return "\(selectedCountry.dialCode)\(phoneNo)"
+        if phoneNo.count > 10 && phoneNo.starts(with: dialCode) {
+            return String(phoneNo.suffix(phoneNo.count - dialCode.count))
+        }
+        
+        return "\(dialCode)\(phoneNo)"
     }
     
     public var fullPhoneNoWithPlus: String {
