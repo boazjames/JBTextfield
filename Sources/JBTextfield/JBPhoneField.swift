@@ -112,7 +112,7 @@ public class BasePhoneField: UIView {
         }
         
         if phoneNo.count > 10 && phoneNo.starts(with: dialCode) {
-            return String(phoneNo.suffix(phoneNo.count - dialCode.count))
+            phoneNo = String(phoneNo.suffix(phoneNo.count - dialCode.count))
         }
         
         return "\(dialCode)\(phoneNo)"
