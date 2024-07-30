@@ -824,11 +824,11 @@ public class JBCreditCardTextfield: BaseTextfield {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
             icon.tintColor = textfield.isFirstResponder ? highlightColor : labelColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.borderColor = errorColor
+            mainContainerView.jbBorderColor = errorColor
             icon.tintColor = errorColor
             label.textColor = errorColor
         }
@@ -858,7 +858,7 @@ extension JBCreditCardTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         label.textColor = highlightColor
         secondaryLabel.textColor = highlightColor
-        mainContainerView.borderColor = highlightColor
+        mainContainerView.jbBorderColor = highlightColor
         icon.tintColor = highlightColor
         if let text = textField.text {
             if text.isEmpty {
@@ -872,7 +872,7 @@ extension JBCreditCardTextfield: UITextFieldDelegate {
     public func textFieldDidEndEditing(_ textField: UITextField) {
         label.textColor = labelColor
         secondaryLabel.textColor = labelColor
-        mainContainerView.borderColor = strokeColor
+        mainContainerView.jbBorderColor = strokeColor
         icon.tintColor = labelColor
         
         if let text = textField.text {

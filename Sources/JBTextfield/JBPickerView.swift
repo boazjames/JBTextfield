@@ -76,7 +76,7 @@ public class BasePickerView: UIView {
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         view.jbBorderWidth = 1
-        view.viewCornerRadius = 5
+        view.jbViewCornerRadius = 5
         return view
     }()
     
