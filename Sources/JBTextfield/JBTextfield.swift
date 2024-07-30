@@ -110,8 +110,8 @@ public class BaseTextfield: UIView {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.borderWidth = 1
-        view.viewCornerRadius = 5
+        view.jbBorderWidth = 1
+        view.jbViewCornerRadius = 5
         return view
     }()
     
@@ -363,14 +363,14 @@ public class JBTextfield: BaseTextfield {
             textfield.becomeFirstResponder()
         }
         
-        mainContainerView.borderColor = errorColor
+        mainContainerView.jbBorderColor = errorColor
         icon.tintColor = errorColor
         label.textColor = errorColor
     }
     
     public override func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
         icon.tintColor = textfield.isFirstResponder ? highlightColor : .labelColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
@@ -379,12 +379,12 @@ public class JBTextfield: BaseTextfield {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
             icon.tintColor = textfield.isFirstResponder ? highlightColor : labelColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
             secondaryLabel.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.borderColor = errorColor
+            mainContainerView.jbBorderColor = errorColor
             icon.tintColor = errorColor
             label.textColor = errorColor
             secondaryLabel.textColor = errorColor
@@ -403,7 +403,7 @@ extension JBTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         label.textColor = highlightColor
         secondaryLabel.textColor = highlightColor
-        mainContainerView.borderColor = highlightColor
+        mainContainerView.jbBorderColor = highlightColor
         icon.tintColor = highlightColor
         if let text = textField.text {
             if text.isEmpty {
@@ -417,7 +417,7 @@ extension JBTextfield: UITextFieldDelegate {
     public func textFieldDidEndEditing(_ textField: UITextField) {
         label.textColor = labelColor
         secondaryLabel.textColor = labelColor
-        mainContainerView.borderColor = strokeColor
+        mainContainerView.jbBorderColor = strokeColor
         icon.tintColor = labelColor
         
         if let text = textField.text {
@@ -584,7 +584,7 @@ public class JBAmountTextfield: BaseTextfield {
             textfield.becomeFirstResponder()
         }
         
-        mainContainerView.borderColor = errorColor
+        mainContainerView.jbBorderColor = errorColor
         icon.tintColor = errorColor
         label.textColor = errorColor
         secondaryLabel.textColor = errorColor
@@ -592,7 +592,7 @@ public class JBAmountTextfield: BaseTextfield {
     
     public override func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
         icon.tintColor = textfield.isFirstResponder ? highlightColor : .labelColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         secondaryLabel.textColor = textfield.isFirstResponder ? highlightColor : labelColor
@@ -602,11 +602,11 @@ public class JBAmountTextfield: BaseTextfield {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
             icon.tintColor = textfield.isFirstResponder ? highlightColor : labelColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.borderColor = errorColor
+            mainContainerView.jbBorderColor = errorColor
             icon.tintColor = errorColor
             label.textColor = errorColor
         }
@@ -636,7 +636,7 @@ extension JBAmountTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         label.textColor = highlightColor
         secondaryLabel.textColor = highlightColor
-        mainContainerView.borderColor = highlightColor
+        mainContainerView.jbBorderColor = highlightColor
         icon.tintColor = highlightColor
         if let text = textField.text {
             if text.isEmpty {
@@ -650,7 +650,7 @@ extension JBAmountTextfield: UITextFieldDelegate {
     public func textFieldDidEndEditing(_ textField: UITextField) {
         label.textColor = labelColor
         secondaryLabel.textColor = labelColor
-        mainContainerView.borderColor = strokeColor
+        mainContainerView.jbBorderColor = strokeColor
         icon.tintColor = labelColor
         
         if let text = textField.text {
@@ -806,7 +806,7 @@ public class JBCreditCardTextfield: BaseTextfield {
             textfield.becomeFirstResponder()
         }
         
-        mainContainerView.borderColor = errorColor
+        mainContainerView.jbBorderColor = errorColor
         icon.tintColor = errorColor
         label.textColor = errorColor
         secondaryLabel.textColor = errorColor
@@ -814,7 +814,7 @@ public class JBCreditCardTextfield: BaseTextfield {
     
     public override func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
         icon.tintColor = textfield.isFirstResponder ? highlightColor : .labelColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         secondaryLabel.textColor = textfield.isFirstResponder ? highlightColor : labelColor

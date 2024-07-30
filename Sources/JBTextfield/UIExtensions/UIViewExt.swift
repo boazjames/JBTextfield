@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 @IBDesignable extension UIView {
-    @IBInspectable var borderColor:UIColor? {
+    @IBInspectable var jbBorderColor:UIColor? {
         set {
             layer.borderColor = newValue!.cgColor
         }
@@ -22,7 +22,7 @@ import UIKit
             }
         }
     }
-    @IBInspectable var borderWidth:CGFloat {
+    @IBInspectable var jbBorderWidth:CGFloat {
         set {
             layer.borderWidth = newValue
         }
@@ -30,7 +30,7 @@ import UIKit
             return layer.borderWidth
         }
     }
-    @IBInspectable var viewCornerRadius:CGFloat {
+    @IBInspectable var jbViewCornerRadius:CGFloat {
         set {
             layer.cornerRadius = newValue
             clipsToBounds = newValue > 0

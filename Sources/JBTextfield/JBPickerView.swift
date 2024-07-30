@@ -75,7 +75,7 @@ public class BasePickerView: UIView {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.borderWidth = 1
+        view.jbBorderWidth = 1
         view.viewCornerRadius = 5
         return view
     }()
@@ -108,8 +108,9 @@ public class BasePickerView: UIView {
         view.textColor = .placeholderColor
         view.textAlignment = .left
         view.labelCornerRadius = 0
-        view.borderColor = .clear
-        view.borderWidth = 0
+        view.labelBorderColor = .clear
+        view.jbBorderColor = .clear
+        view.jbBorderWidth = 0
         view.leftInset = 10
         view.topInset = 0
         view.bottomInset = 0
@@ -182,13 +183,13 @@ public class BasePickerView: UIView {
     public func showError(_ message: String) {
         lblError.text = message
         
-        mainContainerView.borderColor = errorColor
+        mainContainerView.jbBorderColor = errorColor
         placeHolderLabel.textColor = errorColor
     }
     
     public func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = strokeColor
+        mainContainerView.jbBorderColor = strokeColor
         placeHolderLabel.textColor = labelColor
     }
     
@@ -196,11 +197,11 @@ public class BasePickerView: UIView {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.borderColor = strokeColor
+            mainContainerView.jbBorderColor = strokeColor
             icon.tintColor = labelColor
             placeHolderLabel.textColor = labelColor
         } else {
-            mainContainerView.borderColor = errorColor
+            mainContainerView.jbBorderColor = errorColor
             icon.tintColor = errorColor
             placeHolderLabel.textColor = errorColor
         }

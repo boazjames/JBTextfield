@@ -111,8 +111,8 @@ public class JBTextView: TextView {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.borderWidth = 1
-        view.viewCornerRadius = 5
+        view.jbBorderWidth = 1
+        view.jbViewCornerRadius = 5
         return view
     }()
     
@@ -219,10 +219,10 @@ public class JBTextView: TextView {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.borderColor = errorColor
+            mainContainerView.jbBorderColor = errorColor
             label.textColor = errorColor
         }
         
@@ -238,13 +238,13 @@ public class JBTextView: TextView {
             textfield.becomeFirstResponder()
         }
         
-        mainContainerView.borderColor = errorColor
+        mainContainerView.jbBorderColor = errorColor
         label.textColor = errorColor
     }
     
     public func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
     
@@ -307,7 +307,7 @@ public class JBTextView: TextView {
 extension JBTextView: UITextViewDelegate {
     public func textViewDidBeginEditing(_ textView: UITextView) {
         label.textColor = highlightColor
-        mainContainerView.borderColor = highlightColor
+        mainContainerView.jbBorderColor = highlightColor
         
         if self.isEmpty {
             showLabel()
@@ -319,7 +319,7 @@ extension JBTextView: UITextViewDelegate {
     
     public func textViewDidEndEditing(_ textView: UITextView) {
         label.textColor = labelColor
-        mainContainerView.borderColor = strokeColor
+        mainContainerView.jbBorderColor = strokeColor
         
         if self.isEmpty {
             hideLabel()

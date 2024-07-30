@@ -126,8 +126,8 @@ public class BasePhoneField: UIView {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.borderWidth = 1
-        view.viewCornerRadius = 5
+        view.jbBorderWidth = 1
+        view.jbViewCornerRadius = 5
         return view
     }()
     
@@ -281,10 +281,10 @@ public class BasePhoneField: UIView {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.borderColor = errorColor
+            mainContainerView.jbBorderColor = errorColor
             label.textColor = errorColor
         }
         
@@ -323,13 +323,13 @@ public class BasePhoneField: UIView {
             textfield.becomeFirstResponder()
         }
         
-        mainContainerView.borderColor = errorColor
+        mainContainerView.jbBorderColor = errorColor
         label.textColor = errorColor
     }
     
     public func hideError() {
         lblError.text = nil
-        mainContainerView.borderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
     
@@ -464,7 +464,7 @@ public class JBPhoneField: BasePhoneField {
 extension JBPhoneField: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         label.textColor = highlightColor
-        mainContainerView.borderColor = highlightColor
+        mainContainerView.jbBorderColor = highlightColor
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -476,7 +476,7 @@ extension JBPhoneField: UITextFieldDelegate {
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
         label.textColor = labelColor
-        mainContainerView.borderColor = strokeColor
+        mainContainerView.jbBorderColor = strokeColor
         
         if let text = textField.text {
             if text.isEmpty {
