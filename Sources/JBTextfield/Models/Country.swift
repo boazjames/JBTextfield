@@ -12,7 +12,7 @@ public struct JBCountry: Decodable {
     public var code: String
     public var dialCode: String
     
-    init(name: String, code: String, dialCode: String) {
+    public init(name: String, code: String, dialCode: String) {
         self.name = name
         self.code = code
         self.dialCode = dialCode
