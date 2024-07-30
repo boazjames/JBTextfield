@@ -269,7 +269,7 @@ public class BasePhoneField: UIView {
         label.text = labelText
     }
     
-    func setCountry(_ country: Country) {
+    public func setCountry(_ country: Country) {
         selectedCountry = country
         selectedCountryCode = country.dialCode
         flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
