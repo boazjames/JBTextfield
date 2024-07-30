@@ -277,6 +277,21 @@ public class BasePhoneField: UIView {
         countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
     }
     
+    public func setCountry(_ dialCode: String) {
+        guard let path = Bundle.module.path(forResource: "countries", ofType: "json") else { return }
+        let jsonString = (try? String(contentsOfFile: path, encoding: String.Encoding.utf8)) ?? ""
+        let data = Data(jsonString.utf8)
+        let countries = (try? JSONDecoder().decode([JBCountry].self, from: data)) ?? []
+        
+        if let country = countries.first(where: { $0.dialCode == dialCode }) {
+            selectedCountry = country
+            selectedCountryCode = country.dialCode
+            flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
+            lblCountryCode.text = country.code
+            countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
+        }
+    }
+    
     func setupColors() {
         let errorMessage = lblError.text ?? ""
         
