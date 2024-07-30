@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Country: Decodable {
+public struct JBCountry: Decodable {
     public var name: String
     public var code: String
     public var dialCode: String

@@ -97,7 +97,7 @@ public class BasePhoneField: UIView {
     }
     
     var customDialCodes = [String]()
-    public var selectedCountry = Country(name: "Kenya", code: "KE", dialCode: "254")
+    public var selectedCountry = JBCountry(name: "Kenya", code: "KE", dialCode: "254")
     var selectedCountryCode = "254"
     
     public var fullPhoneNo: String {
@@ -269,7 +269,7 @@ public class BasePhoneField: UIView {
         label.text = labelText
     }
     
-    public func setCountry(_ country: Country) {
+    public func setCountry(_ country: JBCountry) {
         selectedCountry = country
         selectedCountryCode = country.dialCode
         flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)

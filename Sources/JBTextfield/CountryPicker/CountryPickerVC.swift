@@ -56,12 +56,12 @@ class CountryPickerVC: BaseVC {
         return tblView
     }()
     
-    private var allCountries: [Country] = []
-    private var countries: [Country] = []
+    private var allCountries: [JBCountry] = []
+    private var countries: [JBCountry] = []
     var customDialCodes: [String] = []
     var selectedCountryCode: String?
-    private var selectedCountry: Country?
-    var filteredCountries: [Country] = []
+    private var selectedCountry: JBCountry?
+    var filteredCountries: [JBCountry] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -207,7 +207,7 @@ extension CountryPickerVC: UITableViewDelegate {
 }
 
 protocol CountryPickerDelegate {
-    func onSelect(didSelectCountry country: Country)
+    func onSelect(didSelectCountry country: JBCountry)
 }
 
 
@@ -216,7 +216,7 @@ extension CountryPickerVC {
         guard let path = Bundle.module.path(forResource: "countries", ofType: "json") else { return }
         let jsonString = (try? String(contentsOfFile: path, encoding: String.Encoding.utf8)) ?? ""
         let data = Data(jsonString.utf8)
-        allCountries = (try? JSONDecoder().decode([Country].self, from: data)) ?? []
+        allCountries = (try? JSONDecoder().decode([JBCountry].self, from: data)) ?? []
         countries.removeAll()
         
         if customDialCodes.isEmpty {
