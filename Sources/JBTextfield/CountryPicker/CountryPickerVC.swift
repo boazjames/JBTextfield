@@ -62,6 +62,7 @@ class CountryPickerVC: BaseVC {
     var selectedCountryCode: String?
     private var selectedCountry: JBCountry?
     var filteredCountries: [JBCountry] = []
+    var completion: ((_ country: JBCountry, _ flag: UIImage?) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,6 +193,7 @@ extension CountryPickerVC: UITableViewDelegate {
         let item = filteredCountries[indexPath.row]
         self.delegate?.onSelect(didSelectCountry: item)
         textfield?.setCountry(item)
+        completion?(item, UIImage(named: item.code, in: .module, compatibleWith: nil))
         self.dismiss(animated: true)
     }
     
