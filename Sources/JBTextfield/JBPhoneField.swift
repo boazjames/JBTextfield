@@ -365,6 +365,19 @@ public class BasePhoneField: UIView {
         let nc = UINavigationController(rootViewController: vc)
         viewController.present(nc, animated: true)
     }
+    
+    public static func getCountryDetails(countryCode: String) -> (country: JBCountry, flag: UIImage?)? {
+        guard let path = Bundle.module.path(forResource: "countries", ofType: "json") else { return nil }
+        let jsonString = (try? String(contentsOfFile: path, encoding: String.Encoding.utf8)) ?? ""
+        let data = Data(jsonString.utf8)
+        let countries = (try? JSONDecoder().decode([JBCountry].self, from: data)) ?? []
+        
+        if let country = countries.filter({ $0.code.equalsIgnoringCase(countryCode) || $0.dialCode.equalsIgnoringCase(countryCode) }).first {
+            return (country: country, UIImage(named: country.code, in: .module, compatibleWith: nil))
+        }
+        
+        return nil
+    }
 }
 
 public class JBPhoneField: BasePhoneField {
