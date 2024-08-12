@@ -234,8 +234,8 @@ extension CountryPickerVC {
         
         filteredCountries.append(contentsOf: countries)
         
-        if let  selectedCountryCode = selectedCountryCode?.trimmingCharacters(in: .whitespacesAndNewlines), !selectedCountryCode.isEmpty {
-            selectedCountry = countries.filter({ $0.dialCode == selectedCountryCode }).first
+        if let selectedCountryCode = selectedCountryCode?.trimmingCharacters(in: .whitespacesAndNewlines), !selectedCountryCode.isEmpty {
+            selectedCountry = countries.filter({ $0.dialCode.equalsIgnoringCase(selectedCountryCode) || $0.code.equalsIgnoringCase(selectedCountryCode) }).first
         }
         
         tableView.reloadData()
