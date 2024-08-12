@@ -193,7 +193,7 @@ extension CountryPickerVC: UITableViewDelegate {
         let item = filteredCountries[indexPath.row]
         self.delegate?.onSelect(didSelectCountry: item)
         textfield?.setCountry(item)
-        completion?(item, UIImage(named: item.code, in: .module, compatibleWith: nil))
+        completion?(item, UIImage(named: item.code.lowercased(), in: .module, compatibleWith: nil))
         self.dismiss(animated: true)
     }
     

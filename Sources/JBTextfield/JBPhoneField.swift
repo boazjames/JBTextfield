@@ -373,7 +373,7 @@ public class BasePhoneField: UIView {
         let countries = (try? JSONDecoder().decode([JBCountry].self, from: data)) ?? []
         
         if let country = countries.filter({ $0.code.equalsIgnoringCase(countryCode) || $0.dialCode.equalsIgnoringCase(countryCode) }).first {
-            return (country: country, UIImage(named: country.code, in: .module, compatibleWith: nil))
+            return (country: country, UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil))
         }
         
         return nil
