@@ -358,14 +358,8 @@ public class BasePhoneField: UIView {
     }
     
     public static func showCountryPicker(viewController: UIViewController, selectedCountryCode: String?, customDialCodes: [String], completion: @escaping (_ country: JBCountry, _ flag: UIImage?) -> Void) {
-        guard let path = Bundle.module.path(forResource: "countries", ofType: "json") else { return }
-        let jsonString = (try? String(contentsOfFile: path, encoding: String.Encoding.utf8)) ?? ""
-        let data = Data(jsonString.utf8)
-        let countries = (try? JSONDecoder().decode([JBCountry].self, from: data)) ?? []
-        
-        let country = countries.first(where: { $0.code.equalsIgnoringCase(selectedCountryCode ?? "") })
         let vc = CountryPickerVC()
-        vc.selectedCountryCode = country?.code
+        vc.selectedCountryCode = selectedCountryCode
         vc.customDialCodes = customDialCodes
         vc.completion = completion
         let nc = UINavigationController(rootViewController: vc)
