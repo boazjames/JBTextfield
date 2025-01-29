@@ -531,3 +531,138 @@ public class JBDatePickerView: BasePickerView {
         self.setText(date.formatDate(formatString: dateDispalyFormat), value: date.formatDate(formatString: dateValueFormat))
     }
 }
+
+@IBDesignable
+public class JBDatePickerViewV2: BasePickerView {
+    
+    public var date: Date?
+    public var maxDate: Date?
+    public var minDate: Date?
+    public var datePickerMode: UIDatePicker.Mode = .date
+    public var dateDispalyFormat: String = "dd MMM yyyy"
+    public var dateValueFormat: String = "yyyy-MM-dd"
+    public var delegate: DateTimePickerDelegate?
+    
+    override func setupViews() {
+        super.setupViews()
+                
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        
+        self.addSubview(mainContainerView)
+        mainContainerView.addSubview(containerView)
+        containerView.addSubview(placeHolderLabel)
+        containerView.addSubview(label)
+        containerView.addSubview(icon)
+        self.addSubview(lblError)
+        
+        mainContainerView.pinToView(parentView: self, bottom: false)
+        mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
+        
+        containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
+        containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
+        
+        NSLayoutConstraint.activate([
+            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
+            placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
+        ])
+        labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
+        labelHeightConstraint.activate()
+        
+        label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
+        NSLayoutConstraint.activate([
+            label.heightAnchor.constraint(equalToConstant: 40),
+            label.topAnchor.constraint(equalTo: placeHolderLabel.centerYAnchor),
+            label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 18),
+            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            icon.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -15)
+        ])
+        
+        lblError.pinToView(parentView: self, top: false)
+        lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+        
+        label.leftInset = 10
+        
+        mainContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showPicker)))
+    }
+    
+    override public func setPlaceholder(_ placeholder: String) {
+        self.labelText = placeholder
+        placeHolderLabel.text = placeholder
+        label.text = placeholder
+    }
+    
+    override public func setText(_ text: String, value: String) {
+        self.value = value
+        self.text = text
+        if text.isEmpty {
+            label.text = labelText
+            label.textColor = placeholderColor
+            
+            if !labelHeightConstraint.isActive {
+                hideLabel()
+            }
+        } else {
+            label.text = text
+            label.textColor = labelColor
+            
+            if labelHeightConstraint.isActive {
+                showLabel()
+            }
+        }
+        
+        hideError()
+    }
+    
+    private func showLabel() {
+        self.layoutIfNeeded()
+        let originY = label.frame.origin.y
+        let distance: CGFloat = 20
+        placeHolderLabel.frame.origin.y = originY + distance
+        self.bringSubviewToFront(placeHolderLabel)
+        
+        UIView.animate(withDuration: 0.3) {
+            self.labelHeightConstraint.deactivate()
+            self.placeHolderLabel.frame.origin.y = originY
+            self.layoutIfNeeded()
+        }
+    }
+    
+    private func hideLabel() {
+        UIView.animate(withDuration: 0.3) {
+            self.labelHeightConstraint.activate()
+            self.layoutIfNeeded()
+        }
+    }
+    
+    @objc private func showPicker() {
+        guard let parentVC = findViewController() else { return }
+        parentVC.view.endEditing(true)
+        
+        let vc = DateTimePickerVCV2()
+        vc.pickerTitle = labelText
+        vc.selected = date
+        vc.sourceView = self
+        vc.minDate = minDate
+        vc.maxDate = maxDate
+        vc.datePickerMode = datePickerMode
+        vc.dateDispalyFormat = dateDispalyFormat
+        vc.dateValueFormat = dateValueFormat
+        vc.delegate = delegate
+        
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .coverVertical
+        parentVC.present(vc, animated: true)
+    }
+    
+    public func setDate(date: Date) {
+        self.date = date
+        self.setText(date.formatDate(formatString: dateDispalyFormat), value: date.formatDate(formatString: dateValueFormat))
+    }
+}

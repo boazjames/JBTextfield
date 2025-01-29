@@ -202,4 +202,6 @@ class DateTimePickerVC: BaseVC {
 
 public protocol DateTimePickerDelegate {
     func didSelect(didSelectDate date: Date, sourceView: JBDatePickerView?)
+    
+    func didSelect(didSelectDate date: Date, sourceView: JBDatePickerViewV2?)
 }
