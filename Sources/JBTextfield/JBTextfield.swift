@@ -200,6 +200,7 @@ public class BaseTextfield: UIView {
         secondaryLabel.font = secondaryLabelFont
         textfield.font = textfieldFont
         lblError.font = errorLabelFont
+        mainContainerView.backgroundColor = boxBackgroundColor
         
 //        textfield.addDoneButtonOnKeyboard(color: highlightColor)
         
