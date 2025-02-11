@@ -526,9 +526,9 @@ public class JBDatePickerView: BasePickerView {
         parentVC.present(vc, animated: true)
     }
     
-    public func setDate(date: Date) {
+    public func setDate(date: Date?) {
         self.date = date
-        self.setText(date.formatDate(formatString: dateDispalyFormat), value: date.formatDate(formatString: dateValueFormat))
+        self.setText(date?.formatDate(formatString: dateDispalyFormat) ?? "", value: date?.formatDate(formatString: dateValueFormat) ?? "")
     }
 }
 
@@ -661,8 +661,8 @@ public class JBDatePickerViewV2: BasePickerView {
         parentVC.present(vc, animated: true)
     }
     
-    public func setDate(date: Date) {
+    public func setDate(date: Date?) {
         self.date = date
-        self.setText(date.formatDate(formatString: dateDispalyFormat), value: date.formatDate(formatString: dateValueFormat))
+        self.setText(date?.formatDate(formatString: dateDispalyFormat) ?? "", value: date?.formatDate(formatString: dateValueFormat) ?? "")
     }
 }

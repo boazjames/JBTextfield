@@ -8,8 +8,8 @@
 import Foundation
 
 public struct JBPickerItem {
-    var title: String
-    var value: String
+    public var title: String
+    public var value: String
     
     public init(title: String, value: String) {
         self.title = title
