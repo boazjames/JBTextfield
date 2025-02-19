@@ -96,7 +96,15 @@ public class BasePhoneField: UIView {
         }
     }
     
-    var customDialCodes = [String]()
+    var errorText: String {
+        return lblError.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+    
+    var isErrorTextEmpty: Bool {
+        return errorText.isEmpty
+    }
+    
+    public var customDialCodes = [String]()
     public var selectedCountry = JBCountry(name: "Kenya", code: "KE", dialCode: "254")
     var selectedCountryCode = "254"
     
@@ -222,6 +230,13 @@ public class BasePhoneField: UIView {
         return view
     }()
     
+    let separatorView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -243,6 +258,7 @@ public class BasePhoneField: UIView {
         textfield.font = textfieldFont
         lblError.font = errorLabelFont
         lblCountryCode.font = countryCodeLabelFont
+        separatorView.backgroundColor = strokeColor
         
         setupColors()
         
@@ -297,9 +313,11 @@ public class BasePhoneField: UIView {
         
         if errorMessage.isEmpty {
             mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            separatorView.backgroundColor = textfield.isFirstResponder ? highlightColor : strokeColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
             mainContainerView.jbBorderColor = errorColor
+            separatorView.backgroundColor = errorColor
             label.textColor = errorColor
         }
         
@@ -340,11 +358,13 @@ public class BasePhoneField: UIView {
         
         mainContainerView.jbBorderColor = errorColor
         label.textColor = errorColor
+        separatorView.backgroundColor = errorColor
     }
     
     public func hideError() {
         lblError.text = nil
         mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        separatorView.backgroundColor = textfield.isFirstResponder ? highlightColor : strokeColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
     
@@ -500,8 +520,8 @@ public class JBPhoneField: BasePhoneField {
 // Mark: UITextFieldDelegate
 extension JBPhoneField: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        label.textColor = highlightColor
-        mainContainerView.jbBorderColor = highlightColor
+        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -512,8 +532,8 @@ extension JBPhoneField: UITextFieldDelegate {
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        label.textColor = labelColor
-        mainContainerView.jbBorderColor = strokeColor
+        label.textColor = isErrorTextEmpty ? labelColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
         
         if let text = textField.text {
             if text.isEmpty {
@@ -522,6 +542,146 @@ extension JBPhoneField: UITextFieldDelegate {
         } else {
             hideLabel()
         }
+    }
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        
+        var fullText: String {
+            if string.isEmpty {
+                var text = currentText
+                guard let myRange = Range(range, in: currentText) else { return text}
+                text.replaceSubrange(myRange, with: string)
+                
+                return text
+            }
+            
+            return "\(currentText)\(string)"
+        }
+        
+        if fullText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        
+        let myFullText = fullText.onlyDigits()
+        
+        if !myFullText.isNumeric() {
+            return false
+        }
+        
+        isDeleting = myFullText.count < currentText.count
+                        
+        return myFullText.count <= maxLength || maxLength == 0
+    }
+}
+
+public class JBStackedPhoneField: BasePhoneField {
+    override func setupView() {
+        super.setupView()
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        
+        self.addSubview(mainContainerView)
+        mainContainerView.addSubview(containerView)
+        mainContainerView.addSubview(countryCodeContainer)
+        countryCodeContainer.addSubview(flagImg)
+        countryCodeContainer.addSubview(lblCountryCode)
+        countryCodeContainer.addSubview(icPicker)
+        mainContainerView.addSubview(separatorView)
+        mainContainerView.addSubview(textfield)
+        self.addSubview(lblError)
+        
+        mainContainerView.pinToView(parentView: self, bottom: false)
+        
+        NSLayoutConstraint.activate([
+            countryCodeContainer.leadingAnchor.constraint(equalTo: mainContainerView.leadingAnchor, constant: 15),
+            countryCodeContainer.trailingAnchor.constraint(equalTo: mainContainerView.trailingAnchor, constant: -15),
+            countryCodeContainer.topAnchor.constraint(equalTo: mainContainerView.topAnchor),
+            countryCodeContainer.heightAnchor.constraint(equalToConstant: 50),
+        ])
+        
+        flagImg.applyAspectRatio(aspectRation: 3 / 2)
+        
+        NSLayoutConstraint.activate([
+            flagImg.widthAnchor.constraint(equalToConstant: 30),
+            flagImg.leadingAnchor.constraint(equalTo: countryCodeContainer.leadingAnchor, constant: 0),
+            flagImg.centerYAnchor.constraint(equalTo: countryCodeContainer.centerYAnchor)
+        ])
+        
+        countryCodeConstraint = lblCountryCode.widthAnchor.constraint(equalToConstant: lblCountryCode.intrinsicContentSize.width)
+        
+        NSLayoutConstraint.activate([
+            lblCountryCode.leadingAnchor.constraint(equalTo: flagImg.trailingAnchor, constant: 10),
+            lblCountryCode.trailingAnchor.constraint(equalTo: icPicker.leadingAnchor, constant: -10),
+            lblCountryCode.centerYAnchor.constraint(equalTo: countryCodeContainer.centerYAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            icPicker.widthAnchor.constraint(equalToConstant: 12),
+            icPicker.heightAnchor.constraint(equalToConstant: 12),
+            icPicker.centerYAnchor.constraint(equalTo: countryCodeContainer.centerYAnchor),
+            icPicker.trailingAnchor.constraint(equalTo: countryCodeContainer.trailingAnchor, constant: 0)
+        ])
+        
+        labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+        
+        NSLayoutConstraint.activate([
+            separatorView.leadingAnchor.constraint(equalTo: mainContainerView.leadingAnchor),
+            separatorView.trailingAnchor.constraint(equalTo: mainContainerView.trailingAnchor),
+            separatorView.topAnchor.constraint(equalTo: countryCodeContainer.bottomAnchor),
+            separatorView.heightAnchor.constraint(equalToConstant: 1)
+        ])
+        
+        NSLayoutConstraint.activate([
+            textfield.leadingAnchor.constraint(equalTo: mainContainerView.leadingAnchor),
+            textfield.trailingAnchor.constraint(equalTo: mainContainerView.trailingAnchor),
+            textfield.heightAnchor.constraint(equalToConstant: 50),
+            textfield.topAnchor.constraint(equalTo: separatorView.bottomAnchor),
+            textfield.bottomAnchor.constraint(equalTo: mainContainerView.bottomAnchor)
+        ])
+        
+        lblError.pinToView(parentView: self, top: false)
+        lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+        
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
+        textfield.delegate = self
+    }
+    
+    public override func setCountry(_ country: JBCountry) {
+        super.setCountry(country)
+        
+        lblCountryCode.text = "\(country.name) (+\(country.dialCode))"
+    }
+    
+    public override func setCountry(_ dialCode: String) {
+        super.setCountry(dialCode)
+        
+        lblCountryCode.text = "\(selectedCountry.name) (+\(selectedCountry.dialCode))"
+    }
+    
+    public func setText(_ text: String) {
+        if text.isEmpty {
+            textfield.text = text
+            label.textColor = .secondaryLabelColor
+        } else {
+            textfield.text = text
+            label.textColor = .labelColor
+        }
+    }
+}
+
+// Mark: UITextFieldDelegate
+extension JBStackedPhoneField: UITextFieldDelegate {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
+        separatorView.backgroundColor = isErrorTextEmpty ? highlightColor : errorColor
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
+        separatorView.backgroundColor = isErrorTextEmpty ? strokeColor : errorColor
     }
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
