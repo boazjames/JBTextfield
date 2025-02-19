@@ -177,10 +177,22 @@ public class BaseTextfield: UIView {
         let view = UIImageView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.tintColor = .black
+        view.tintColor = .labelColor
+        view.contentMode = .scaleAspectFill
         view.applyAspectRatio(aspectRation: 1)
         return view
     }()
+    
+    @IBInspectable public var iconImage: UIImage? {
+        didSet {
+            icon.image = iconImage?.withRenderingMode(.alwaysTemplate)
+            icon.isHidden = iconImage == nil
+            textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 10)
+            labelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+        }
+    }
+    
+    var labelLeadingConstraint: NSLayoutConstraint!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -266,6 +278,7 @@ public class JBTextfield: BaseTextfield {
         mainContainerView.addSubview(containerView)
         containerView.addSubview(textfield)
         containerView.addSubview(label)
+        containerView.addSubview(icon)
         self.addSubview(lblError)
         
         mainContainerView.pinToView(parentView: self, bottom: false)
@@ -275,11 +288,18 @@ public class JBTextfield: BaseTextfield {
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            labelLeadingConstraint,
             label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint
+        ])
+        
+        NSLayoutConstraint.activate([
+            icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+            icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            icon.widthAnchor.constraint(equalToConstant: 20)
         ])
         
         textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
@@ -489,6 +509,7 @@ public class JBAmountTextfield: BaseTextfield {
         containerView.addSubview(secondaryLabel)
         containerView.addSubview(textfield)
         containerView.addSubview(label)
+        containerView.addSubview(icon)
         self.addSubview(lblError)
         
         mainContainerView.pinToView(parentView: self, bottom: false)
@@ -498,11 +519,20 @@ public class JBAmountTextfield: BaseTextfield {
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
             label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0),
             label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
-            labelHeightConstraint
+            labelHeightConstraint,
+            labelLeadingConstraint
+        ])
+        
+        icon.applyAspectRatio(aspectRation: 1)
+        NSLayoutConstraint.activate([
+            icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+            icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            icon.widthAnchor.constraint(equalToConstant: 20)
         ])
         
         NSLayoutConstraint.activate([
@@ -716,6 +746,7 @@ public class JBCreditCardTextfield: BaseTextfield {
         mainContainerView.addSubview(containerView)
         containerView.addSubview(textfield)
         containerView.addSubview(label)
+        containerView.addSubview(icon)
         self.addSubview(lblError)
         
         mainContainerView.pinToView(parentView: self, bottom: false)
@@ -725,11 +756,20 @@ public class JBCreditCardTextfield: BaseTextfield {
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
             label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
-            labelHeightConstraint
+            labelHeightConstraint,
+            labelLeadingConstraint
+        ])
+        
+        icon.applyAspectRatio(aspectRation: 1)
+        NSLayoutConstraint.activate([
+            icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+            icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            icon.widthAnchor.constraint(equalToConstant: 20)
         ])
         
         textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)

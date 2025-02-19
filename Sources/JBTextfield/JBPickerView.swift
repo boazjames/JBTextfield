@@ -429,6 +429,7 @@ public class JBDatePickerView: BasePickerView {
         labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
         labelHeightConstraint.activate()
         
+        pickerIcon.applyAspectRatio(aspectRation: 1)
         NSLayoutConstraint.activate([
             pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
             pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
