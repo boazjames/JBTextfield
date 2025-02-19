@@ -106,6 +106,14 @@ public class BaseTextfield: UIView {
         }
     }
     
+    var errorText: String {
+        return lblError.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+    
+    var isErrorTextEmpty: Bool {
+        return errorText.isEmpty
+    }
+    
     var mainContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -422,10 +430,10 @@ public class JBTextfield: BaseTextfield {
 // Mark: UITextFieldDelegate
 extension JBTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        label.textColor = highlightColor
-        secondaryLabel.textColor = highlightColor
-        mainContainerView.jbBorderColor = highlightColor
-        icon.tintColor = highlightColor
+        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        secondaryLabel.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
+        icon.tintColor = isErrorTextEmpty ? highlightColor : errorColor
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -436,10 +444,10 @@ extension JBTextfield: UITextFieldDelegate {
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        label.textColor = labelColor
-        secondaryLabel.textColor = labelColor
-        mainContainerView.jbBorderColor = strokeColor
-        icon.tintColor = labelColor
+        label.textColor = isErrorTextEmpty ? labelColor : errorColor
+        secondaryLabel.textColor = isErrorTextEmpty ? labelColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
+        icon.tintColor = isErrorTextEmpty ? labelColor : errorColor
         
         if let text = textField.text {
             if text.isEmpty {
@@ -665,10 +673,10 @@ public class JBAmountTextfield: BaseTextfield {
 // Mark: UITextFieldDelegate
 extension JBAmountTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        label.textColor = highlightColor
-        secondaryLabel.textColor = highlightColor
-        mainContainerView.jbBorderColor = highlightColor
-        icon.tintColor = highlightColor
+        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        secondaryLabel.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
+        icon.tintColor = isErrorTextEmpty ? highlightColor : errorColor
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -679,10 +687,10 @@ extension JBAmountTextfield: UITextFieldDelegate {
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        label.textColor = labelColor
-        secondaryLabel.textColor = labelColor
-        mainContainerView.jbBorderColor = strokeColor
-        icon.tintColor = labelColor
+        label.textColor = isErrorTextEmpty ? labelColor : errorColor
+        secondaryLabel.textColor = isErrorTextEmpty ? labelColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
+        icon.tintColor = isErrorTextEmpty ? labelColor : errorColor
         
         if let text = textField.text {
             if text.isEmpty {
@@ -897,10 +905,10 @@ public class JBCreditCardTextfield: BaseTextfield {
 // Mark: UITextFieldDelegate
 extension JBCreditCardTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        label.textColor = highlightColor
-        secondaryLabel.textColor = highlightColor
-        mainContainerView.jbBorderColor = highlightColor
-        icon.tintColor = highlightColor
+        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        secondaryLabel.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
+        icon.tintColor = isErrorTextEmpty ? highlightColor : errorColor
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -911,10 +919,10 @@ extension JBCreditCardTextfield: UITextFieldDelegate {
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        label.textColor = labelColor
-        secondaryLabel.textColor = labelColor
-        mainContainerView.jbBorderColor = strokeColor
-        icon.tintColor = labelColor
+        label.textColor = isErrorTextEmpty ? labelColor : errorColor
+        secondaryLabel.textColor = isErrorTextEmpty ? labelColor : errorColor
+        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
+        icon.tintColor = isErrorTextEmpty ? labelColor : errorColor
         
         if let text = textField.text {
             if text.isEmpty {

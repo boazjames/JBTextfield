@@ -104,6 +104,14 @@ public class JBTextView: TextView {
         }
     }
     
+    var errorText: String {
+        return lblError.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+    
+    var isErrorTextEmpty: Bool {
+        return errorText.isEmpty
+    }
+    
     public private(set) var placeholder = ""
     public private(set) var text = ""
     
@@ -306,8 +314,8 @@ public class JBTextView: TextView {
 // Mark: UITextViewDelegate
 extension JBTextView: UITextViewDelegate {
     public func textViewDidBeginEditing(_ textView: UITextView) {
-        label.textColor = highlightColor
-        mainContainerView.jbBorderColor = highlightColor
+        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
+        mainContainerView.jbBorderColor =  isErrorTextEmpty ? highlightColor : errorColor
         
         if self.isEmpty {
             showLabel()
@@ -318,8 +326,8 @@ extension JBTextView: UITextViewDelegate {
     }
     
     public func textViewDidEndEditing(_ textView: UITextView) {
-        label.textColor = labelColor
-        mainContainerView.jbBorderColor = strokeColor
+        label.textColor =  isErrorTextEmpty ? labelColor : errorColor
+        mainContainerView.jbBorderColor =  isErrorTextEmpty ? strokeColor : errorColor
         
         if self.isEmpty {
             hideLabel()
