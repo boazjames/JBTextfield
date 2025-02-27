@@ -426,7 +426,7 @@ public class JBPhoneField: BasePhoneField {
         
         NSLayoutConstraint.activate([
             countryCodeContainer.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            countryCodeContainer.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            countryCodeContainer.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
             countryCodeContainer.heightAnchor.constraint(equalTo: containerView.heightAnchor),
         ])
         
