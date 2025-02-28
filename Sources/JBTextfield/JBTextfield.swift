@@ -1,5 +1,9 @@
 import UIKit
 
+@objc public protocol JBTextFieldDelegate {
+    @objc optional func textDidChange(textField: UITextField)
+}
+
 @IBDesignable
 public class BaseTextfield: UIView {
     var isDeleting = false
@@ -200,6 +204,8 @@ public class BaseTextfield: UIView {
         }
     }
     
+    public var delegate: JBTextFieldDelegate?
+    
     var labelLeadingConstraint: NSLayoutConstraint!
     
     override init(frame: CGRect) {
@@ -267,6 +273,8 @@ public class BaseTextfield: UIView {
         }
         
         hideError()
+        
+        delegate?.textDidChange?(textField: sender)
     }
     
     func setupColors() {}

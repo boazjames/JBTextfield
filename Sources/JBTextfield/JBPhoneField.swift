@@ -130,6 +130,8 @@ public class BasePhoneField: UIView {
         return "+\(fullPhoneNo)"
     }
     
+    public var delegate: JBTextFieldDelegate?
+    
     var mainContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -347,6 +349,8 @@ public class BasePhoneField: UIView {
         }
         
         hideError()
+        
+        delegate?.textDidChange?(textField: sender)
     }
     
     public func showError(_ message: String, focusOnField: Bool = false) {
