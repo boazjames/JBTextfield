@@ -71,7 +71,7 @@ public class BasePickerView: UIView {
     var labelHeightConstraint: NSLayoutConstraint!
     var labelTopConstraint: NSLayoutConstraint!
     
-    var mainContainerView: UIView = {
+    public var mainContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
