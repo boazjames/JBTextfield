@@ -674,6 +674,8 @@ public class JBAmountTextfield: BaseTextfield {
         }
         
         hideError()
+        
+        delegate?.textDidChange?(textField: sender)
     }
 }
 
@@ -906,6 +908,8 @@ public class JBCreditCardTextfield: BaseTextfield {
         }
         
         hideError()
+        
+        delegate?.textDidChange?(textField: sender)
     }
 }
 
@@ -1132,6 +1136,8 @@ public class JBNumberTextfield: BaseTextfield {
         }
         
         hideError()
+        
+        delegate?.textDidChange?(textField: sender)
     }
 }
 
