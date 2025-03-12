@@ -1022,7 +1022,7 @@ public class JBNumberTextfield: BaseTextfield {
         lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
         
         textfield.textPadding = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        label.leftInset = 50
+        label.leftInset = 0
         
         textfield.delegate = self
                 
