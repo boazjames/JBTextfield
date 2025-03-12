@@ -973,6 +973,10 @@ extension JBCreditCardTextfield: UITextFieldDelegate {
 
 @IBDesignable
 public class JBNumberTextfield: BaseTextfield {
+    public var numberValue: Double {
+        return Double(cleanAmountText(text: text.trimmingCharacters(in: .whitespacesAndNewlines))) ?? 0
+    }
+    
     override func setupView() {
         super.setupView()
                 
