@@ -18,6 +18,10 @@ public class BaseTextfield: UIView {
         return textfield.text ?? ""
     }
     
+    public var numericValue: Double {
+        return textfield.text?.trimmingCharacters(in: .whitespacesAndNewlines).doubleValue() ?? 0
+    }
+    
     public var isEmpty: Bool {
         return text.isEmpty
     }
@@ -518,7 +522,7 @@ public class JBAmountTextfield: BaseTextfield {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
-        self.textfield.keyboardType = .numberPad
+        self.textfield.keyboardType = .decimalPad
         
         self.addSubview(mainContainerView)
         mainContainerView.addSubview(containerView)
@@ -613,7 +617,7 @@ public class JBAmountTextfield: BaseTextfield {
                 hideLabel()
             }
         } else {
-            textfield.text = formatNumber(Int(cleanAmountText(text: text)) ?? 0)
+            textfield.text = numberFormat(text.doubleValue(), maximumFractionDigits: 10)
             
             label.textColor = labelColor
             
@@ -666,8 +670,16 @@ public class JBAmountTextfield: BaseTextfield {
     
     public override func textDidChange(_ sender: UITextField) {
         guard let text = sender.text else { return }
-        
-        let myText = text.isEmpty ? text : formatNumber(Int(cleanAmountText(text: text)) ?? 0)
+                
+        var myText = text.isEmpty ? text : numberFormat(text.doubleValue())
+                
+        let decimalSeparator = getDecimalSeparator()
+        if text.hasSuffix(decimalSeparator) {
+            myText += decimalSeparator
+        } else if let decimalIndex = text.firstIndex(of: Character(decimalSeparator)) {
+            let fractionPart = text[text.index(after: decimalIndex)...]
+            myText += "\(decimalSeparator)\(fractionPart)"
+        }
         
         if myText != text {
             self.textfield.text = myText
@@ -729,8 +741,8 @@ extension JBAmountTextfield: UITextFieldDelegate {
             return true
         }
         
-        let myFullText = cleanAmountText(text: fullText)
-        
+        let myFullText = fullText.onlyNumeric()
+                
         if !myFullText.isNumeric() {
             return false
         }
@@ -986,7 +998,7 @@ public class JBNumberTextfield: BaseTextfield {
                 
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
-        self.textfield.keyboardType = .numberPad
+        self.textfield.keyboardType = .decimalPad
         
         self.addSubview(mainContainerView)
         mainContainerView.addSubview(containerView)
@@ -1075,7 +1087,7 @@ public class JBNumberTextfield: BaseTextfield {
                 hideLabel()
             }
         } else {
-            textfield.text = formatNumber(Int(cleanAmountText(text: text)) ?? 0)
+            textfield.text = numberFormat(text.doubleValue(), maximumFractionDigits: 10)
             
             label.textColor = labelColor
             
@@ -1128,8 +1140,16 @@ public class JBNumberTextfield: BaseTextfield {
     
     public override func textDidChange(_ sender: UITextField) {
         guard let text = sender.text else { return }
-        
-        let myText = text.isEmpty ? text : formatNumber(Int(cleanAmountText(text: text)) ?? 0)
+                
+        var myText = text.isEmpty ? text : numberFormat(text.doubleValue())
+                
+        let decimalSeparator = getDecimalSeparator()
+        if text.hasSuffix(decimalSeparator) {
+            myText += decimalSeparator
+        } else if let decimalIndex = text.firstIndex(of: Character(decimalSeparator)) {
+            let fractionPart = text[text.index(after: decimalIndex)...]
+            myText += "\(decimalSeparator)\(fractionPart)"
+        }
         
         if myText != text {
             self.textfield.text = myText
@@ -1189,8 +1209,8 @@ extension JBNumberTextfield: UITextFieldDelegate {
             return true
         }
         
-        let myFullText = cleanAmountText(text: fullText)
-        
+        let myFullText = fullText.onlyNumeric()
+                
         if !myFullText.isNumeric() {
             return false
         }

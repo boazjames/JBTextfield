@@ -15,25 +15,29 @@ func safeAreaTopInset() -> CGFloat  {
     return UIWindow.keyWindow?.safeAreaInsets.top ?? 0
 }
 
-func formatNumber(_ num: Int) -> String {
+func numberFormat(_ value: Float, maximumFractionDigits: Int = 0) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
     numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
-    return numberFormatter.string(from: NSNumber(value:num)) ?? "0"
+    numberFormatter.maximumFractionDigits = maximumFractionDigits
+    numberFormatter.roundingMode = .down
+    return numberFormatter.string(from: NSNumber(value:value)) ?? ""
 }
 
-func formatNumber(_ num: Float) -> String {
+func numberFormat(_ value: Int) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
     numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
-    return numberFormatter.string(from: NSNumber(value:num)) ?? "0"
+    return numberFormatter.string(from: NSNumber(value:value)) ?? ""
 }
 
-func formatNumber(_ num: Double) -> String {
+func numberFormat(_ value: Double, maximumFractionDigits: Int = 0) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
     numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
-    return numberFormatter.string(from: NSNumber(value:num)) ?? "0"
+    numberFormatter.maximumFractionDigits = maximumFractionDigits
+    numberFormatter.roundingMode = .down
+    return numberFormatter.string(from: NSNumber(value:value)) ?? ""
 }
 
 
@@ -41,9 +45,25 @@ func cleanAmountText(text: String) -> String {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
     numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
-    return text.replacingOccurrences(of: "-", with: "").replacingOccurrences(of: ".00", with: "").replacingOccurrences(of: numberFormatter.groupingSeparator ?? "", with: "")
+    return text.replacingOccurrences(of: "-", with: "").replacingOccurrences(of: numberFormatter.groupingSeparator ?? "", with: "")
 }
 
 func cleanPAN(PAN: String) -> String {
     return PAN.replacingOccurrences(of: "-", with: "")
+}
+
+
+func getDecimalSeparator() -> String {
+    let numberFormatter = NumberFormatter()
+    numberFormatter.numberStyle = .decimal
+    numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
+    return numberFormatter.decimalSeparator ?? ""
+}
+
+
+func getNumberSeparator() -> String {
+    let numberFormatter = NumberFormatter()
+    numberFormatter.numberStyle = .decimal
+    numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
+    return numberFormatter.groupingSeparator ?? ""
 }
