@@ -24,6 +24,24 @@ public class BasePhoneField: UIView {
         }
     }
     
+    @IBInspectable public var boxCornerRadius: CGFloat = 5 {
+        didSet {
+            mainContainerView.jbViewCornerRadius = boxCornerRadius
+        }
+    }
+    
+    @IBInspectable public var boxBorderWidth: CGFloat = 1 {
+        didSet {
+            mainContainerView.jbBorderWidth = boxBorderWidth
+        }
+    }
+    
+    @IBInspectable public var boxBorderColor: UIColor = UIColor.strokeColor {
+        didSet {
+            mainContainerView.jbBorderColor = boxBorderColor
+        }
+    }
+    
     public var text: String {
         return textfield.text ?? ""
     }

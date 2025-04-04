@@ -104,6 +104,24 @@ public class JBTextView: TextView {
         }
     }
     
+    @IBInspectable public var boxCornerRadius: CGFloat = 5 {
+        didSet {
+            mainContainerView.jbViewCornerRadius = boxCornerRadius
+        }
+    }
+    
+    @IBInspectable public var boxBorderWidth: CGFloat = 1 {
+        didSet {
+            mainContainerView.jbBorderWidth = boxBorderWidth
+        }
+    }
+    
+    @IBInspectable public var boxBorderColor: UIColor = UIColor.strokeColor {
+        didSet {
+            mainContainerView.jbBorderColor = boxBorderColor
+        }
+    }
+    
     var errorText: String {
         return lblError.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
