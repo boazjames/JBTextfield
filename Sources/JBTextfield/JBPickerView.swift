@@ -531,6 +531,24 @@ public class JBDatePickerView: BasePickerView {
         self.date = date
         self.setText(date?.formatDate(formatString: dateDispalyFormat) ?? "", value: date?.formatDate(formatString: dateValueFormat) ?? "")
     }
+    
+    public static func showDatePicker(on viewController: UIViewController, title: String = "", selectedDate: Date? = nil, minDate: Date? = nil, maxDate: Date? = nil, datePickerMode: UIDatePicker.Mode = .date, delegate: DateTimePickerDelegate? = nil) {
+        viewController.view.endEditing(true)
+        
+        let vc = DateTimePickerVC()
+        vc.pickerTitle = title
+        vc.selected = selectedDate
+        vc.minDate = minDate
+        vc.maxDate = maxDate
+        vc.datePickerMode = datePickerMode
+        vc.dateDispalyFormat = "dd MMM yyyy"
+        vc.dateValueFormat = "yyyy-MM-dd"
+        vc.delegate = delegate
+        
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .coverVertical
+        viewController.present(vc, animated: true)
+    }
 }
 
 @IBDesignable
