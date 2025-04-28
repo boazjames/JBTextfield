@@ -309,8 +309,8 @@ public class BasePhoneField: UIView {
         selectedCountry = country
         selectedCountryCode = country.dialCode
         flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
-        lblCountryCode.text = self is JBPlainPhoneField ? "+\(country.dialCode)" : country.code
-        countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
+        lblCountryCode.text = country.code
+        countryCodeConstraint?.constant = lblCountryCode.intrinsicContentSize.width
     }
     
     public func setCountry(_ dialCode: String) {
@@ -323,8 +323,8 @@ public class BasePhoneField: UIView {
             selectedCountry = country
             selectedCountryCode = country.dialCode
             flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
-            lblCountryCode.text = self is JBPlainPhoneField ? "+\(country.dialCode)" : country.code
-            countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
+            lblCountryCode.text = country.code
+            countryCodeConstraint?.constant = lblCountryCode.intrinsicContentSize.width
         }
     }
     
