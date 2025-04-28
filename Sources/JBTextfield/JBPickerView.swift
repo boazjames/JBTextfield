@@ -416,6 +416,7 @@ public class JBPlainPickerView: BasePickerView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
+        label.textAlignment = textAlignment
         
         self.addSubview(label)
         addSubview(icon)
@@ -718,6 +719,7 @@ public class JBPlainDatePickerView: BasePickerView {
         
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
+        label.textAlignment = textAlignment
         
         self.addSubview(label)
         addSubview(icon)

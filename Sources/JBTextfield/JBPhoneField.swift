@@ -619,6 +619,7 @@ public class JBPlainPhoneField: BasePhoneField {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         textfield.textAlignment = textAlignment
+        lblCountryCode.textAlignment = .right
         lblCountryCode.isUserInteractionEnabled = true
         
         self.addSubview(lblCountryCode)
@@ -654,6 +655,12 @@ public class JBPlainPhoneField: BasePhoneField {
     
     public override func setCountry(_ dialCode: String) {
         super.setCountry(dialCode)
+        
+        lblCountryCode.text = "+\(selectedCountry.dialCode)"
+    }
+    
+    public override func setCountry(_ country: JBCountry) {
+        super.setCountry(country)
         
         lblCountryCode.text = "+\(selectedCountry.dialCode)"
     }

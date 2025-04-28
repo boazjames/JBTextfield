@@ -911,6 +911,7 @@ public class JBPlainAmountTextfield: BaseTextfield {
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = .decimalPad
         textfield.textAlignment = textAlignment
+        secondaryLabel.textAlignment = .right
         
         self.addSubview(secondaryLabel)
         self.addSubview(textfield)
