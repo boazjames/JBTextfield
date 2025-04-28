@@ -12,7 +12,7 @@ class DateTimePickerVC: BaseVC {
     var pickerTitle: String!
     var delegate: DateTimePickerDelegate?
     var selected: Date?
-    var sourceView: JBDatePickerView?
+    var sourceView: UIView?
     var maxDate: Date?
     var minDate: Date?
     var datePickerMode: UIDatePicker.Mode = .date
@@ -191,10 +191,27 @@ class DateTimePickerVC: BaseVC {
     }
     
     @objc private func selectionDone() {
-        sourceView?.setText(self.pickerView.date.formatDate(formatString: dateDispalyFormat), value: self.pickerView.date.formatDate(formatString: dateValueFormat))
-        sourceView?.date = pickerView.date
-        self.dismiss(animated: false) {
-            self.delegate?.didSelect?(didSelectDate: self.pickerView.date, sourceView: self.sourceView)
+        if let sourceView = sourceView as? JBDatePickerView {
+            sourceView.setText(self.pickerView.date.formatDate(formatString: dateDispalyFormat), value: self.pickerView.date.formatDate(formatString: dateValueFormat))
+            sourceView.date = pickerView.date
+            
+            self.dismiss(animated: false) {
+                self.delegate?.didSelect?(didSelectDate: self.pickerView.date, sourceView: sourceView)
+            }
+        } else if let sourceView = sourceView as? JBDatePickerViewV2 {
+            sourceView.setText(self.pickerView.date.formatDate(formatString: dateDispalyFormat), value: self.pickerView.date.formatDate(formatString: dateValueFormat))
+            sourceView.date = pickerView.date
+            
+            self.dismiss(animated: false) {
+                self.delegate?.didSelectV2?(didSelectDate: self.pickerView.date, sourceView: sourceView)
+            }
+        } else if let sourceView = sourceView as? JBPlainDatePickerView {
+            sourceView.setText(self.pickerView.date.formatDate(formatString: dateDispalyFormat), value: self.pickerView.date.formatDate(formatString: dateValueFormat))
+            sourceView.date = pickerView.date
+            
+            self.dismiss(animated: false) {
+                self.delegate?.didSelectV3?(didSelectDate: self.pickerView.date, sourceView: sourceView)
+            }
         }
     }
     
@@ -204,4 +221,6 @@ class DateTimePickerVC: BaseVC {
     @objc optional func didSelect(didSelectDate date: Date, sourceView: JBDatePickerView?)
     
     @objc optional func didSelectV2(didSelectDate date: Date, sourceView: JBDatePickerViewV2?)
+    
+    @objc optional func didSelectV3(didSelectDate date: Date, sourceView: UIView?)
 }

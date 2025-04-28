@@ -389,6 +389,143 @@ public class JBPickerView: BasePickerView {
 }
 
 @IBDesignable
+public class JBPlainPickerView: BasePickerView {
+    public var items = [JBPickerItem]()
+    private var selectedItems = [JBPickerItem]()
+    public var actionButtonClosure:  ((_ index: Int, _ item: JBPickerItem) -> Void)?
+    public var multiActionButtonClosure:  ((_ indices: [Int], _ items: [JBPickerItem]) -> Void)?
+    public var allowMultipleSelection = false
+    public var maxSelection = 0
+    
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            labelMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            label.textAlignment = textAlignment
+        }
+    }
+    
+    private var labelMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupViews() {
+        super.setupViews()
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        
+        self.addSubview(label)
+        containerView.addSubview(icon)
+        
+        label.pinToView(parentView: self, trailing: false)
+        labelMinWidthConstraint = label.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            label.heightAnchor.constraint(equalToConstant: 40),
+            labelMinWidthConstraint,
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: icon.leadingAnchor, constant: -5)
+        ])
+        
+        NSLayoutConstraint.activate([
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 18),
+            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            icon.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+        
+        label.leftInset = 0
+        
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showActionPicker)))
+    }
+    
+    override public func setPlaceholder(_ placeholder: String) {
+        self.labelText = placeholder
+        label.text = placeholder
+    }
+    
+    override public func setText(_ text: String, value: String) {
+        self.value = value
+        self.text = text
+        if text.isEmpty {
+            label.text = self.labelText
+            label.textColor = placeholderColor
+        } else {
+            label.text = text
+            label.textColor = labelColor
+        }
+        
+        hideError()
+    }
+    
+    @objc private func showActionPicker() {
+        if allowMultipleSelection {
+            showMultiActionPicker()
+            return
+        }
+        
+        guard let vc = findViewController() else { return }
+        vc.view.endEditing(true)
+        if !items.isEmpty {
+            let alertVC = UIAlertController(title: labelText, message: nil, preferredStyle: .actionSheet)
+            for (index, item) in items.enumerated() {
+                let alertAction = UIAlertAction(title: item.title, style: .default) { (alertAction: UIAlertAction!) in
+                    self.setText(item.title, value: item.value)
+                    self.actionButtonClosure?(index, item)
+                }
+                alertVC.addAction(alertAction)
+            }
+            
+            let cancelAction = UIAlertAction(title: "dismiss".localized, style: .cancel, handler: {
+                (alert: UIAlertAction!) -> Void in
+            })
+            
+            alertVC.addAction(cancelAction)
+            
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                alertVC.popoverPresentationController?.sourceView = self
+                alertVC.popoverPresentationController?.sourceRect = CGRect(x: self.bounds.size.width / 6.0, y: self.bounds.size.height / 2.0, width: 1.0, height: 1.0)
+            }
+            vc.present(alertVC, animated: true)
+        }
+    }
+    
+    @objc private func showMultiActionPicker() {
+        guard let parentVc = findViewController() else { return }
+        parentVc.view.endEditing(true)
+        if !items.isEmpty {
+            let vc = MultipleSelectionVC()
+            vc.completionHandler = { (indices, items) in
+                self.selectedItems = items
+                self.setupMultiSelectText()
+                self.multiActionButtonClosure?(indices, items)
+            }
+            vc.items = items
+            vc.pickerTitle = labelText
+            vc.selectedItems = selectedItems
+            vc.maxSelection = maxSelection
+            
+            let navVc = UINavigationController(rootViewController: vc)
+            navVc.modalPresentationStyle = .fullScreen
+            navVc.modalTransitionStyle = .coverVertical
+            parentVc.present(navVc, animated: true)
+        }
+    }
+    
+    private func setupMultiSelectText() {
+        let text = selectedItems.map({ "✦ \($0.title)" }).joined(separator: "\n")
+        setText(text, value: "")
+    }
+    
+    public func setSelectedItems(_ items: [JBPickerItem]) {
+        self.selectedItems = items
+        self.setupMultiSelectText()
+    }
+}
+
+@IBDesignable
 public class JBDatePickerView: BasePickerView {
     
     public var date: Date?
@@ -401,9 +538,7 @@ public class JBDatePickerView: BasePickerView {
     
     override func setupViews() {
         super.setupViews()
-        
-        pickerIcon.image = UIImage(named: "calendar", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
-        
+                
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         
@@ -505,6 +640,126 @@ public class JBDatePickerView: BasePickerView {
             self.labelHeightConstraint.activate()
             self.layoutIfNeeded()
         }
+    }
+    
+    @objc private func showPicker() {
+        guard let parentVC = findViewController() else { return }
+        parentVC.view.endEditing(true)
+        
+        let vc = DateTimePickerVC()
+        vc.pickerTitle = labelText
+        vc.selected = date
+        vc.sourceView = self
+        vc.minDate = minDate
+        vc.maxDate = maxDate
+        vc.datePickerMode = datePickerMode
+        vc.dateDispalyFormat = dateDispalyFormat
+        vc.dateValueFormat = dateValueFormat
+        vc.delegate = delegate
+        
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .coverVertical
+        parentVC.present(vc, animated: true)
+    }
+    
+    public func setDate(date: Date?) {
+        self.date = date
+        self.setText(date?.formatDate(formatString: dateDispalyFormat) ?? "", value: date?.formatDate(formatString: dateValueFormat) ?? "")
+    }
+    
+    public static func showDatePicker(on viewController: UIViewController, title: String = "", selectedDate: Date? = nil, minDate: Date? = nil, maxDate: Date? = nil, datePickerMode: UIDatePicker.Mode = .date, delegate: DateTimePickerDelegate? = nil) {
+        viewController.view.endEditing(true)
+        
+        let vc = DateTimePickerVC()
+        vc.pickerTitle = title
+        vc.selected = selectedDate
+        vc.minDate = minDate
+        vc.maxDate = maxDate
+        vc.datePickerMode = datePickerMode
+        vc.dateDispalyFormat = "dd MMM yyyy"
+        vc.dateValueFormat = "yyyy-MM-dd"
+        vc.delegate = delegate
+        
+        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalTransitionStyle = .coverVertical
+        viewController.present(vc, animated: true)
+    }
+}
+
+@IBDesignable
+public class JBPlainDatePickerView: BasePickerView {
+    
+    public var date: Date?
+    public var maxDate: Date?
+    public var minDate: Date?
+    public var datePickerMode: UIDatePicker.Mode = .date
+    public var dateDispalyFormat: String = "dd MMM yyyy"
+    public var dateValueFormat: String = "yyyy-MM-dd"
+    public var delegate: DateTimePickerDelegate?
+    
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            labelMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            label.textAlignment = textAlignment
+        }
+    }
+    
+    private var labelMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupViews() {
+        super.setupViews()
+        
+        pickerIcon.image = UIImage(named: "calendar", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        
+        self.addSubview(label)
+        containerView.addSubview(icon)
+        
+        label.pinToView(parentView: self, trailing: false)
+        labelMinWidthConstraint = label.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            label.heightAnchor.constraint(equalToConstant: 40),
+            labelMinWidthConstraint,
+            label.leadingAnchor.constraint(equalTo: leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: icon.leadingAnchor, constant: -5)
+        ])
+        
+        NSLayoutConstraint.activate([
+            icon.widthAnchor.constraint(equalToConstant: 18),
+            icon.heightAnchor.constraint(equalToConstant: 18),
+            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            icon.trailingAnchor.constraint(equalTo: trailingAnchor)
+        ])
+        
+        label.leftInset = 0
+        
+        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showPicker)))
+    }
+    
+    override public func setPlaceholder(_ placeholder: String) {
+        self.labelText = placeholder
+        label.text = placeholder
+    }
+    
+    override public func setText(_ text: String, value: String) {
+        self.value = value
+        self.text = text
+        if text.isEmpty {
+            label.text = labelText
+            label.textColor = placeholderColor
+        } else {
+            label.text = text
+            label.textColor = labelColor
+        }
+        
+        hideError()
     }
     
     @objc private func showPicker() {

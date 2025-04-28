@@ -526,6 +526,115 @@ extension JBTextfield: UITextFieldDelegate {
 }
 
 @IBDesignable
+public class JBPlainTextfield: BaseTextfield {
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            textfieldMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            textfield.textAlignment = textAlignment
+        }
+    }
+    
+    private var textfieldMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupView() {
+        super.setupView()
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        self.textfield.keyboardType = keyboardType
+        textfield.textAlignment = textAlignment
+        
+        self.addSubview(textfield)
+        
+        textfield.pinToView(parentView: self)
+        textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            textfield.heightAnchor.constraint(equalToConstant: 40),
+            textfieldMinWidthConstraint
+        ])
+        
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        textfield.delegate = self
+                
+    }
+    
+    public override func setPlaceholder(_ placeholder: String) {
+        super.setPlaceholder(placeholder)
+        textfield.placeholder = placeholder
+    }
+    
+    public override func setText(_ text: String) {
+        if text.isEmpty {
+            textfield.text = text
+        } else {
+            var myText: String {
+                if textfield.keyboardType == .numberPad {
+                    return text.onlyDigits()
+                }
+                
+                return text
+            }
+            
+            textfield.text = myText
+        }
+    }
+    
+    override func setupColors() {
+        
+        textfield.textColor = labelColor
+        textfield.tintColor = highlightColor
+        
+//        textfield.addDoneButtonOnKeyboard(color: highlightColor)
+    }
+}
+
+// Mark: UITextFieldDelegate
+extension JBPlainTextfield: UITextFieldDelegate {
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        
+        var fullText: String {
+            if string.isEmpty {
+                var text = currentText
+                guard let myRange = Range(range, in: currentText) else { return text}
+                text.replaceSubrange(myRange, with: string)
+                
+                return text
+            }
+            
+            return "\(currentText)\(string)"
+        }
+        
+        if fullText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        
+        var myFullText: String {
+            if textfield.keyboardType == .numberPad {
+                return fullText.onlyDigits()
+            }
+            
+            return fullText
+        }
+        
+        if textfield.keyboardType == .numberPad && !myFullText.isNumeric() {
+            return false
+        }
+        
+        isDeleting = myFullText.count < currentText.count
+                        
+        return myFullText.count <= maxLength || maxLength == 0
+    }
+}
+
+@IBDesignable
 public class JBAmountTextfield: BaseTextfield {
     @IBInspectable public var currency = "KES" {
         didSet {
@@ -740,6 +849,140 @@ extension JBAmountTextfield: UITextFieldDelegate {
         }
     }
     
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        
+        var fullText: String {
+            if string.isEmpty {
+                var text = currentText
+                guard let myRange = Range(range, in: currentText) else { return text}
+                text.replaceSubrange(myRange, with: string)
+                
+                return text
+            }
+            
+            return "\(currentText)\(string)"
+        }
+        
+        if fullText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        
+        let myFullText = fullText.onlyNumeric()
+                
+        if !myFullText.isNumeric() {
+            return false
+        }
+        
+        isDeleting = myFullText.count < currentText.count
+                        
+        return myFullText.count <= maxLength || maxLength == 0
+    }
+}
+
+@IBDesignable
+public class JBPlainAmountTextfield: BaseTextfield {
+    @IBInspectable public var currency = "KES" {
+        didSet {
+            secondaryLabel.text = currency
+        }
+    }
+    
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            textfieldMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            textfield.textAlignment = textAlignment
+        }
+    }
+    
+    private var textfieldMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupView() {
+        super.setupView()
+        
+        secondaryLabel.text = currency
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        self.textfield.keyboardType = .decimalPad
+        textfield.textAlignment = textAlignment
+        
+        self.addSubview(secondaryLabel)
+        self.addSubview(textfield)
+        
+        NSLayoutConstraint.activate([
+            secondaryLabel.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+            secondaryLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
+        ])
+        
+        textfield.pinToView(parentView: self, leading: false)
+        textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            textfield.heightAnchor.constraint(equalToConstant: 40),
+            textfieldMinWidthConstraint,
+            textfield.leadingAnchor.constraint(equalTo: secondaryLabel.trailingAnchor, constant: 5)
+        ])
+        
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        textfield.delegate = self
+                
+    }
+    
+    public override func setPlaceholder(_ placeholder: String) {
+        super.setPlaceholder(placeholder)
+        textfield.placeholder = placeholder
+    }
+    
+    public override func setPlaceholder(_ placeholder: String, labelText: String) {
+        super.setPlaceholder(placeholder, labelText: labelText)
+        textfield.placeholder = placeholder
+    }
+    
+    public override func setText(_ text: String) {
+        if text.isEmpty {
+            textfield.text = text
+        } else {
+            textfield.text = numberFormat(text.doubleValue(), maximumFractionDigits: 10)
+        }
+    }
+    
+    override func setupColors() {
+        secondaryLabel.textColor = labelColor
+        textfield.textColor = labelColor
+        textfield.tintColor = highlightColor
+    }
+    
+    public override func textDidChange(_ sender: UITextField) {
+        guard let text = sender.text else { return }
+                
+        var myText = text.isEmpty ? text : numberFormat(text.doubleValue())
+                
+        let decimalSeparator = getDecimalSeparator()
+        if text.hasSuffix(decimalSeparator) {
+            myText += decimalSeparator
+        } else if let decimalIndex = text.firstIndex(of: Character(decimalSeparator)) {
+            let fractionPart = text[text.index(after: decimalIndex)...]
+            myText += "\(decimalSeparator)\(fractionPart)"
+        }
+        
+        if myText != text {
+            self.textfield.text = myText
+        }
+        
+        hideError()
+        
+        delegate?.textDidChange?(textField: sender)
+    }
+}
+
+// Mark: UITextFieldDelegate
+extension JBPlainAmountTextfield: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         
@@ -1006,6 +1249,127 @@ extension JBCreditCardTextfield: UITextFieldDelegate {
 }
 
 @IBDesignable
+public class JBPlainCreditCardTextfield: BaseTextfield {
+    
+    public var finalText: String {
+        return cleanPAN(PAN: textfield.text ?? "")
+    }
+    
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            textfieldMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            textfield.textAlignment = textAlignment
+        }
+    }
+    
+    private var textfieldMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupView() {
+        super.setupView()
+        
+        maxLength = 16
+        
+        textfield.textContentType = .creditCardNumber
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        self.textfield.keyboardType = .numberPad
+        textfield.textAlignment = textAlignment
+        
+        self.addSubview(textfield)
+        
+        textfield.pinToView(parentView: self)
+        textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            textfield.heightAnchor.constraint(equalToConstant: 40),
+            textfieldMinWidthConstraint
+        ])
+        
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        textfield.delegate = self
+                
+    }
+    
+    public override func setPlaceholder(_ placeholder: String) {
+        super.setPlaceholder(placeholder)
+        textfield.placeholder = placeholder
+    }
+    
+    public override func setPlaceholder(_ placeholder: String, labelText: String) {
+        super.setPlaceholder(placeholder, labelText: labelText)
+        textfield.placeholder = placeholder
+    }
+    
+    public override func setText(_ text: String) {
+        if text.isEmpty {
+            textfield.text = text
+        } else {
+            let myText = String(cleanPAN(PAN: text.removeSpaces()).prefix(maxLength))
+            textfield.text = myText.grouping(every: 4, with: "-")
+        }
+    }
+    
+    override func setupColors() {
+        textfield.textColor = labelColor
+        textfield.tintColor = highlightColor
+    }
+    
+    public override func textDidChange(_ sender: UITextField) {
+        guard let text = sender.text else { return }
+        
+        let myText = text.isEmpty ? text : cleanPAN(PAN: text.removeSpaces()).grouping(every: 4, with: "-")
+                
+        if myText != text {
+            self.textfield.text = myText
+        }
+        
+        hideError()
+        
+        delegate?.textDidChange?(textField: sender)
+    }
+}
+
+// Mark: UITextFieldDelegate
+extension JBPlainCreditCardTextfield: UITextFieldDelegate {
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        
+        var fullText: String {
+            if string.isEmpty {
+                var text = currentText
+                guard let myRange = Range(range, in: currentText) else { return text}
+                text.replaceSubrange(myRange, with: string)
+                
+                return text
+            }
+            
+            return "\(currentText)\(string)"
+        }
+        
+        if fullText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        
+        let myFullText = cleanPAN(PAN: fullText)
+        
+        if !myFullText.isNumeric() {
+            return false
+        }
+        
+        isDeleting = myFullText.count < currentText.count
+                        
+        return myFullText.count <= maxLength || maxLength == 0
+    }
+}
+
+@IBDesignable
 public class JBNumberTextfield: BaseTextfield {
     override func setupView() {
         super.setupView()
@@ -1204,6 +1568,120 @@ extension JBNumberTextfield: UITextFieldDelegate {
         }
     }
     
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        
+        var fullText: String {
+            if string.isEmpty {
+                var text = currentText
+                guard let myRange = Range(range, in: currentText) else { return text}
+                text.replaceSubrange(myRange, with: string)
+                
+                return text
+            }
+            
+            return "\(currentText)\(string)"
+        }
+        
+        if fullText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        
+        let myFullText = fullText.onlyNumeric()
+                
+        if !myFullText.isNumeric() {
+            return false
+        }
+        
+        isDeleting = myFullText.count < currentText.count
+                        
+        return myFullText.count <= maxLength || maxLength == 0
+    }
+}
+
+@IBDesignable
+public class JBPlainNumberTextfield: BaseTextfield {
+    
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            textfieldMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            textfield.textAlignment = textAlignment
+        }
+    }
+    
+    private var textfieldMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupView() {
+        super.setupView()
+                
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        self.textfield.keyboardType = .decimalPad
+        textfield.textAlignment = textAlignment
+        
+        self.addSubview(textfield)
+        
+        textfield.pinToView(parentView: self)
+        textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            textfield.heightAnchor.constraint(equalToConstant: 40),
+            textfieldMinWidthConstraint
+        ])
+        
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        textfield.delegate = self
+                
+    }
+    
+    public override func setPlaceholder(_ placeholder: String) {
+        super.setPlaceholder(placeholder)
+        textfield.placeholder = placeholder
+    }
+    
+    public override func setText(_ text: String) {
+        if text.isEmpty {
+            textfield.text = text
+        } else {
+            textfield.text = numberFormat(text.doubleValue(), maximumFractionDigits: 10)
+        }
+    }
+    
+    override func setupColors() {
+        textfield.textColor = labelColor
+        textfield.tintColor = highlightColor
+    }
+    
+    public override func textDidChange(_ sender: UITextField) {
+        guard let text = sender.text else { return }
+                
+        var myText = text.isEmpty ? text : numberFormat(text.doubleValue())
+                
+        let decimalSeparator = getDecimalSeparator()
+        if text.hasSuffix(decimalSeparator) {
+            myText += decimalSeparator
+        } else if let decimalIndex = text.firstIndex(of: Character(decimalSeparator)) {
+            let fractionPart = text[text.index(after: decimalIndex)...]
+            myText += "\(decimalSeparator)\(fractionPart)"
+        }
+        
+        if myText != text {
+            self.textfield.text = myText
+        }
+        
+        hideError()
+        
+        delegate?.textDidChange?(textField: sender)
+    }
+}
+
+// Mark: UITextFieldDelegate
+extension JBPlainNumberTextfield: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         

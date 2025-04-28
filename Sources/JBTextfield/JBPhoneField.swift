@@ -309,7 +309,7 @@ public class BasePhoneField: UIView {
         selectedCountry = country
         selectedCountryCode = country.dialCode
         flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
-        lblCountryCode.text = country.code
+        lblCountryCode.text = self is JBPlainPhoneField ? "+\(country.dialCode)" : country.code
         countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
     }
     
@@ -323,7 +323,7 @@ public class BasePhoneField: UIView {
             selectedCountry = country
             selectedCountryCode = country.dialCode
             flagImg.image = UIImage(named: country.code.lowercased(), in: .module, compatibleWith: nil)
-            lblCountryCode.text = country.code
+            lblCountryCode.text = self is JBPlainPhoneField ? "+\(country.dialCode)" : country.code
             countryCodeConstraint.constant = lblCountryCode.intrinsicContentSize.width
         }
     }
@@ -390,7 +390,7 @@ public class BasePhoneField: UIView {
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
     
-    @objc private func showCountryPicker() {
+    @objc func showCountryPicker() {
         let vc = CountryPickerVC()
         vc.selectedCountryCode = selectedCountryCode
         vc.customDialCodes = customDialCodes
@@ -566,6 +566,95 @@ extension JBPhoneField: UITextFieldDelegate {
         }
     }
     
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text ?? ""
+        
+        var fullText: String {
+            if string.isEmpty {
+                var text = currentText
+                guard let myRange = Range(range, in: currentText) else { return text}
+                text.replaceSubrange(myRange, with: string)
+                
+                return text
+            }
+            
+            return "\(currentText)\(string)"
+        }
+        
+        if fullText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        
+        let myFullText = fullText.onlyDigits()
+        
+        if !myFullText.isNumeric() {
+            return false
+        }
+        
+        isDeleting = myFullText.count < currentText.count
+                        
+        return myFullText.count <= maxLength || maxLength == 0
+    }
+}
+
+public class JBPlainPhoneField: BasePhoneField {
+    
+    public var minWidth: CGFloat = 100 {
+        didSet {
+            textfieldMinWidthConstraint.constant = minWidth
+        }
+    }
+    
+    public var textAlignment: NSTextAlignment = .right {
+        didSet {
+            textfield.textAlignment = textAlignment
+        }
+    }
+    
+    private var textfieldMinWidthConstraint: NSLayoutConstraint!
+    
+    override func setupView() {
+        super.setupView()
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.isUserInteractionEnabled = true
+        textfield.textAlignment = textAlignment
+        lblCountryCode.isUserInteractionEnabled = true
+        
+        self.addSubview(lblCountryCode)
+        self.addSubview(textfield)
+        
+        NSLayoutConstraint.activate([
+            lblCountryCode.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+            lblCountryCode.leadingAnchor.constraint(equalTo: leadingAnchor)
+        ])
+        
+        textfield.pinToView(parentView: self, leading: false)
+        textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
+        NSLayoutConstraint.activate([
+            textfield.heightAnchor.constraint(equalToConstant: 40),
+            textfieldMinWidthConstraint,
+            textfield.leadingAnchor.constraint(equalTo: lblCountryCode.trailingAnchor, constant: 5)
+        ])
+        
+        textfield.textPadding = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        
+        textfield.delegate = self
+        
+        lblCountryCode.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showCountryPicker)))
+    }
+    
+    public func setText(_ text: String) {
+        if text.isEmpty {
+            textfield.text = text
+        } else {
+            textfield.text = text
+        }
+    }
+}
+
+// Mark: UITextFieldDelegate
+extension JBPlainPhoneField: UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         
