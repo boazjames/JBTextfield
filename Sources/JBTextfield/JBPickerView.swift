@@ -418,7 +418,7 @@ public class JBPlainPickerView: BasePickerView {
         self.isUserInteractionEnabled = true
         
         self.addSubview(label)
-        containerView.addSubview(icon)
+        addSubview(icon)
         
         label.pinToView(parentView: self, trailing: false)
         labelMinWidthConstraint = label.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
@@ -720,7 +720,7 @@ public class JBPlainDatePickerView: BasePickerView {
         self.isUserInteractionEnabled = true
         
         self.addSubview(label)
-        containerView.addSubview(icon)
+        addSubview(icon)
         
         label.pinToView(parentView: self, trailing: false)
         labelMinWidthConstraint = label.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
