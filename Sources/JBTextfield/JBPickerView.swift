@@ -438,6 +438,7 @@ public class JBPlainPickerView: BasePickerView {
         ])
         
         label.leftInset = 0
+        label.rightInset = 0
         
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showActionPicker)))
     }
@@ -741,6 +742,7 @@ public class JBPlainDatePickerView: BasePickerView {
         ])
         
         label.leftInset = 0
+        label.rightInset = 0
         
         self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showPicker)))
     }
