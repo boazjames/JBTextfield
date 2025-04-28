@@ -651,6 +651,12 @@ public class JBPlainPhoneField: BasePhoneField {
             textfield.text = text
         }
     }
+    
+    public override func setCountry(_ dialCode: String) {
+        super.setCountry(dialCode)
+        
+        lblCountryCode.text = "+\(selectedCountry.dialCode)"
+    }
 }
 
 // Mark: UITextFieldDelegate
