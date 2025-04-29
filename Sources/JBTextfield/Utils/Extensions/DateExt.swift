@@ -42,4 +42,26 @@ extension Date {
         formatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
         return formatter.string(from: self)
     }
+    
+    static func parseCreditCardExpiryDate(dateString: String) -> Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/yy"
+        if #available(iOS 16, *) {
+            formatter.locale = Locale(identifier: Locale.current.language.languageCode?.identifier ?? "en")
+        } else {
+            formatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
+        }
+        return formatter.date(from: dateString)
+    }
+    
+    func creditCardExpiryDateFormat() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/yy"
+        formatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
+        return formatter.string(from: self)
+    }
+    
+    func midnight(using calendar: Calendar = .current) -> Date {
+        calendar.date(bySettingHour: 0, minute: 0, second: 0, of: self)!
+    }
 }

@@ -67,3 +67,7 @@ func getNumberSeparator() -> String {
     numberFormatter.locale = Locale(identifier: Locale.current.languageCode ?? "en")
     return numberFormatter.groupingSeparator ?? ""
 }
+
+func cleanCreditCardExpiryDate(text: String) -> String {
+    return text.replacingOccurrences(of: "/", with: "")
+}
