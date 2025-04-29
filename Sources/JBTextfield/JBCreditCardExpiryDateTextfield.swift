@@ -17,9 +17,7 @@ public class JBCreditCardExpiryDateTextfield: BaseTextfield {
         if let date = Date.parseCreditCardExpiryDate(dateString: text) {
             let now = Date()
             
-            print("now", Date.parseCreditCardExpiryDate(dateString: now.creditCardExpiryDateFormat()))
             if let now = Date.parseCreditCardExpiryDate(dateString: now.creditCardExpiryDateFormat()) {
-                print("date", date, "hasCreditCardExpired", date < now)
                 return date < now
             }
         }
@@ -291,7 +289,7 @@ public class JBPlainCreditCardExpiryDateTextfield: BaseTextfield {
             let now = Date()
             
             if let now = Date.parseCreditCardExpiryDate(dateString: now.creditCardExpiryDateFormat()) {
-                return date > now
+                return date < now
             }
         }
         
