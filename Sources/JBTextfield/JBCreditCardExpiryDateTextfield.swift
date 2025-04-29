@@ -400,6 +400,14 @@ public class JBPlainCreditCardExpiryDateTextfield: BaseTextfield {
 
 // Mark: UITextFieldDelegate
 extension JBPlainCreditCardExpiryDateTextfield: UITextFieldDelegate {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.placeholder = "MM/YY"
+    }
+    
+    public func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.placeholder = placehodler
+    }
+    
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = textField.text ?? ""
         
