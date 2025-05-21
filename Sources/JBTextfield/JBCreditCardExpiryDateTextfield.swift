@@ -127,7 +127,7 @@ public class JBCreditCardExpiryDateTextfield: BaseTextfield {
                 hideLabel()
             }
         } else {
-            var myText = String(cleanCreditCardExpiryDate(text: text.replacingOccurrences(of: "/", with: "").removeSpaces()).prefix(expiryDateMaxLength - 1))
+            var myText = String(cleanCreditCardExpiryDate(text: text.removeSpaces()).prefix(expiryDateMaxLength))
             
             if myText.count > 1 {
                 myText.insert("/", at: myText.index(myText.startIndex, offsetBy: 2))
@@ -355,7 +355,7 @@ public class JBPlainCreditCardExpiryDateTextfield: BaseTextfield {
         if text.isEmpty {
             textfield.text = text
         } else {
-            var myText = String(cleanCreditCardExpiryDate(text: text.replacingOccurrences(of: "/", with: "").removeSpaces()).prefix(expiryDateMaxLength - 1))
+            var myText = String(cleanCreditCardExpiryDate(text: text.removeSpaces()).prefix(expiryDateMaxLength))
             
             if myText.count > 1 {
                 myText.insert("/", at: myText.index(myText.startIndex, offsetBy: 2))
