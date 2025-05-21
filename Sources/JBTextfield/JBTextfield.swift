@@ -334,6 +334,7 @@ public class JBTextfield: BaseTextfield {
             labelHeightConstraint
         ])
         
+        icon.applyAspectRatio(aspectRation: 1)
         NSLayoutConstraint.activate([
             icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
             icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),

@@ -68,6 +68,17 @@ public class BasePickerView: UIView {
         }
     }
     
+    @IBInspectable public var iconImage: UIImage? {
+        didSet {
+            pickerIcon.image = iconImage?.withRenderingMode(.alwaysTemplate)
+            pickerIcon.isHidden = iconImage == nil
+            label.leftInset = iconImage == nil ? 10 : 40
+            placeHolderLabelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+        }
+    }
+    
+    var placeHolderLabelLeadingConstraint: NSLayoutConstraint!
+    
     var labelHeightConstraint: NSLayoutConstraint!
     var labelTopConstraint: NSLayoutConstraint!
     
@@ -230,6 +241,7 @@ public class JBPickerView: BasePickerView {
         mainContainerView.addSubview(containerView)
         containerView.addSubview(placeHolderLabel)
         containerView.addSubview(label)
+        containerView.addSubview(pickerIcon)
         containerView.addSubview(icon)
         self.addSubview(lblError)
         
@@ -242,10 +254,18 @@ public class JBPickerView: BasePickerView {
             containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 60)
         ])
         
+        placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
             placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            placeHolderLabelLeadingConstraint,
             placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
+        ])
+        
+        pickerIcon.applyAspectRatio(aspectRation: 1)
+        NSLayoutConstraint.activate([
+            pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            pickerIcon.widthAnchor.constraint(equalToConstant: 20)
         ])
         
         labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
@@ -558,13 +578,21 @@ public class JBDatePickerView: BasePickerView {
         containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
-        NSLayoutConstraint.activate([
-            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
-            placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 37),
-            placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
-        ])
+        placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
-        labelHeightConstraint.activate()
+        NSLayoutConstraint.activate([
+            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+            placeHolderLabelLeadingConstraint,
+            placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            labelHeightConstraint
+        ])
+        
+        pickerIcon.applyAspectRatio(aspectRation: 1)
+        NSLayoutConstraint.activate([
+            pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+            pickerIcon.widthAnchor.constraint(equalToConstant: 20)
+        ])
         
         pickerIcon.applyAspectRatio(aspectRation: 1)
         NSLayoutConstraint.activate([
@@ -590,7 +618,9 @@ public class JBDatePickerView: BasePickerView {
         lblError.pinToView(parentView: self, top: false)
         lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
         
-        label.leftInset = 37
+        iconImage = UIImage(named: "calendar", in: .module, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        
+//        label.leftInset = 37
         
         mainContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showPicker)))
     }
