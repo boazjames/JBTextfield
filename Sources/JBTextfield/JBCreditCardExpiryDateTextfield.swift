@@ -58,7 +58,7 @@ public class JBCreditCardExpiryDateTextfield: BaseTextfield {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
             label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint,
             labelLeadingConstraint
         ])

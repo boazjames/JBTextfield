@@ -330,7 +330,7 @@ public class JBTextfield: BaseTextfield {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
             labelLeadingConstraint,
-            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint
         ])
         
@@ -670,7 +670,7 @@ public class JBAmountTextfield: BaseTextfield {
         labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint,
             labelLeadingConstraint
         ])
@@ -1042,7 +1042,7 @@ public class JBNumberTextfield: BaseTextfield {
         labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint,
             labelLeadingConstraint
         ])

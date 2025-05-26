@@ -258,7 +258,7 @@ public class JBPickerView: BasePickerView {
         NSLayoutConstraint.activate([
             placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
             placeHolderLabelLeadingConstraint,
-            placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
+            placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
         ])
         
         pickerIcon.applyAspectRatio(aspectRation: 1)
@@ -583,7 +583,7 @@ public class JBDatePickerView: BasePickerView {
         NSLayoutConstraint.activate([
             placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
             placeHolderLabelLeadingConstraint,
-            placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10),
+            placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
             labelHeightConstraint
         ])
         
@@ -873,7 +873,7 @@ public class JBDatePickerViewV2: BasePickerView {
         NSLayoutConstraint.activate([
             placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor),
             placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            placeHolderLabel.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -10)
+            placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
         ])
         labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
         labelHeightConstraint.activate()

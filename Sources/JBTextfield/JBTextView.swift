@@ -222,7 +222,7 @@ public class JBTextView: TextView {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 5),
             label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 5),
-            label.trailingAnchor.constraint(lessThanOrEqualTo: containerView.trailingAnchor, constant: -5),
+            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -5),
             labelHeightConstraint
         ])
         
