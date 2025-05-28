@@ -221,14 +221,21 @@ public class BaseTextfield: UIView {
         didSet {
             icon.image = iconImage?.withRenderingMode(.alwaysTemplate)
             icon.isHidden = iconImage == nil
-            textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 10)
-            labelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+            if self is JBAmountTextfield {
+                textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 50 : 80, bottom: 0, right: 10)
+                labelLeadingConstraint.constant = iconImage == nil ? 0 : 30
+                secondaryLabelLeadingConstraint?.constant = iconImage == nil ? 10 : 40
+            } else {
+                textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 10)
+                labelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+            }
         }
     }
     
     public var delegate: JBTextFieldDelegate?
     
     var labelLeadingConstraint: NSLayoutConstraint!
+    var secondaryLabelLeadingConstraint: NSLayoutConstraint?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -667,7 +674,7 @@ public class JBAmountTextfield: BaseTextfield {
         containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
         
         labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
-        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 0)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: containerView.topAnchor),
             label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
@@ -682,9 +689,10 @@ public class JBAmountTextfield: BaseTextfield {
             icon.widthAnchor.constraint(equalToConstant: 20)
         ])
         
+        secondaryLabelLeadingConstraint = secondaryLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+        secondaryLabelLeadingConstraint?.isActive = true
         NSLayoutConstraint.activate([
             secondaryLabel.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
-            secondaryLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
         ])
         
         textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
