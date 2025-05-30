@@ -219,15 +219,20 @@ public class BaseTextfield: UIView {
     
     @IBInspectable public var iconImage: UIImage? {
         didSet {
-            icon.image = iconImage?.withRenderingMode(.alwaysTemplate)
-            icon.isHidden = iconImage == nil
-            if self is JBAmountTextfield {
-                textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 50 : 80, bottom: 0, right: 10)
-                labelLeadingConstraint.constant = iconImage == nil ? 0 : 30
-                secondaryLabelLeadingConstraint?.constant = iconImage == nil ? 10 : 40
-            } else {
-                textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 10)
-                labelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+            if icon.superview != nil {
+                icon.image = iconImage?.withRenderingMode(.alwaysTemplate)
+                icon.isHidden = iconImage == nil
+                if self is JBAmountTextfield {
+                    textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 50 : 80, bottom: 0, right: 10)
+                    labelLeadingConstraint.constant = iconImage == nil ? 0 : 30
+                    secondaryLabelLeadingConstraint?.constant = iconImage == nil ? 10 : 40
+                } else if self is JBPasswordField {
+                    textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 40)
+                    labelLeadingConstraint.constant = iconImage == nil ? 0 : 40
+                } else {
+                    textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 10)
+                    labelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+                }
             }
         }
     }
