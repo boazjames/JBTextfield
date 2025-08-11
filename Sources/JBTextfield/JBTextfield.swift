@@ -4,6 +4,11 @@ import UIKit
     @objc optional func textDidChange(textField: UITextField)
 }
 
+public enum JBTextFieldStyle {
+    case normal
+    case floating
+}
+
 @IBDesignable
 public class BaseTextfield: UIView {
     var isDeleting = false
@@ -110,27 +115,45 @@ public class BaseTextfield: UIView {
     
     @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
         didSet {
-            mainContainerView.backgroundColor = boxBackgroundColor
+            if style == .floating {
+                mainContainerView.backgroundColor = boxBackgroundColor
+            } else {
+                textfield.backgroundColor = boxBackgroundColor
+            }
         }
     }
     
     @IBInspectable public var boxCornerRadius: CGFloat = 5 {
         didSet {
-            mainContainerView.jbViewCornerRadius = boxCornerRadius
+            if style == .floating {
+                mainContainerView.jbViewCornerRadius = boxCornerRadius
+            } else {
+                textfield.jbViewCornerRadius = boxCornerRadius
+            }
         }
     }
     
     @IBInspectable public var boxBorderWidth: CGFloat = 1 {
         didSet {
-            mainContainerView.jbBorderWidth = boxBorderWidth
+            if style == .floating {
+                mainContainerView.jbBorderWidth = boxBorderWidth
+            } else {
+                textfield.jbBorderWidth = boxBorderWidth
+            }
         }
     }
     
     @IBInspectable public var boxBorderColor: UIColor = UIColor.strokeColor {
         didSet {
-            mainContainerView.jbBorderColor = boxBorderColor
+            if style == .floating {
+                mainContainerView.jbBorderColor = boxBorderColor
+            } else {
+                textfield.jbBorderColor = boxBorderColor
+            }
         }
     }
+    
+    public private(set) var style: JBTextFieldStyle = JBTextFieldStyle.floating
     
     var errorText: String {
         return lblError.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
@@ -224,7 +247,7 @@ public class BaseTextfield: UIView {
                 icon.isHidden = iconImage == nil
                 if self is JBAmountTextfield {
                     textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 50 : 80, bottom: 0, right: 10)
-                    labelLeadingConstraint.constant = iconImage == nil ? 0 : 30
+                    labelLeadingConstraint.constant = iconImage == nil || style == .normal ? 0 : 30
                     secondaryLabelLeadingConstraint?.constant = iconImage == nil ? 10 : 40
                 } else if self is JBPasswordField {
                     textfield.textPadding = UIEdgeInsets(top: 0, left: iconImage == nil ? 10 : 40, bottom: 0, right: 40)
@@ -250,6 +273,12 @@ public class BaseTextfield: UIView {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setupView()
+    }
+    
+    public init(style: JBTextFieldStyle) {
+        super.init(frame: .zero)
+        self.style = style
         setupView()
     }
     
@@ -324,44 +353,81 @@ public class JBTextfield: BaseTextfield {
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = keyboardType
         
-        self.addSubview(mainContainerView)
-        mainContainerView.addSubview(containerView)
-        containerView.addSubview(textfield)
-        containerView.addSubview(label)
-        containerView.addSubview(icon)
-        self.addSubview(lblError)
-        
-        mainContainerView.pinToView(parentView: self, bottom: false)
-        mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
-        
-        containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
-        containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
-        
-        labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
-        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            labelLeadingConstraint,
-            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
-            labelHeightConstraint
-        ])
-        
-        icon.applyAspectRatio(aspectRation: 1)
-        NSLayoutConstraint.activate([
-            icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
-            icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            icon.widthAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
-        NSLayoutConstraint.activate([
-            textfield.heightAnchor.constraint(equalToConstant: 40),
-            textfield.topAnchor.constraint(equalTo: label.centerYAnchor),
-            textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
-        
-        lblError.pinToView(parentView: self, top: false)
-        lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+        if style == .floating {
+            self.addSubview(mainContainerView)
+            mainContainerView.addSubview(containerView)
+            containerView.addSubview(textfield)
+            containerView.addSubview(label)
+            containerView.addSubview(icon)
+            self.addSubview(lblError)
+            
+            mainContainerView.pinToView(parentView: self, bottom: false)
+            mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
+            
+            containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
+            containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
+            
+            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+            labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+            NSLayoutConstraint.activate([
+                label.topAnchor.constraint(equalTo: containerView.topAnchor),
+                labelLeadingConstraint,
+                label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+                labelHeightConstraint
+            ])
+            
+            icon.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+                icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                icon.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                textfield.heightAnchor.constraint(equalToConstant: 40),
+                textfield.topAnchor.constraint(equalTo: label.centerYAnchor),
+                textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            ])
+            
+            lblError.pinToView(parentView: self, top: false)
+            lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+            
+        } else {
+            addSubview(label)
+            addSubview(textfield)
+            addSubview(icon)
+            addSubview(lblError)
+            
+            textfield.backgroundColor = boxBackgroundColor
+            textfield.jbBorderColor = boxBorderColor
+            textfield.jbBorderWidth = boxBorderWidth
+            textfield.jbViewCornerRadius = boxCornerRadius
+            
+            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+            labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: leadingAnchor)
+            NSLayoutConstraint.activate([
+                label.topAnchor.constraint(equalTo: topAnchor),
+                labelLeadingConstraint,
+                label.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+            
+            icon.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+                icon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+                icon.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            textfield.pinToView(parentView: self, constant: 0, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                textfield.heightAnchor.constraint(equalToConstant: 50),
+                textfield.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 5)
+            ])
+            
+            lblError.pinToView(parentView: self, top: false)
+            lblError.topAnchor.constraint(equalTo: textfield.bottomAnchor, constant: 4).activate()
+        }
         
         textfield.textPadding = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         
@@ -382,6 +448,8 @@ public class JBTextfield: BaseTextfield {
     }
     
     private func showLabel() {
+        guard style == .floating else { return }
+        
         self.layoutIfNeeded()
         let originY = label.frame.origin.y
         let distance: CGFloat = 20
@@ -395,6 +463,8 @@ public class JBTextfield: BaseTextfield {
     }
     
     private func hideLabel() {
+        guard style == .floating else { return }
+        
         UIView.animate(withDuration: 0.3) {
             self.labelHeightConstraint.activate()
             self.layoutIfNeeded()
@@ -442,7 +512,11 @@ public class JBTextfield: BaseTextfield {
     
     public override func hideError() {
         lblError.text = nil
-        mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        if style == .floating {
+            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        } else {
+            textfield.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+        }
         icon.tintColor = textfield.isFirstResponder ? highlightColor : .labelColor
         label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
     }
@@ -451,12 +525,20 @@ public class JBTextfield: BaseTextfield {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            if style == .floating {
+                mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            } else {
+                textfield.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            }
             icon.tintColor = textfield.isFirstResponder ? highlightColor : labelColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
             secondaryLabel.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.jbBorderColor = errorColor
+            if style == .floating {
+                mainContainerView.jbBorderColor = errorColor
+            } else {
+                textfield.jbBorderColor = errorColor
+            }
             icon.tintColor = errorColor
             label.textColor = errorColor
             secondaryLabel.textColor = errorColor
