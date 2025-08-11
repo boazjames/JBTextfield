@@ -555,10 +555,7 @@ public class JBTextfield: BaseTextfield {
 // Mark: UITextFieldDelegate
 extension JBTextfield: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
-        secondaryLabel.textColor = isErrorTextEmpty ? highlightColor : errorColor
-        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
-        icon.tintColor = isErrorTextEmpty ? highlightColor : errorColor
+        setupColors()
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -569,10 +566,7 @@ extension JBTextfield: UITextFieldDelegate {
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        label.textColor = isErrorTextEmpty ? labelColor : errorColor
-        secondaryLabel.textColor = isErrorTextEmpty ? labelColor : errorColor
-        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
-        icon.tintColor = isErrorTextEmpty ? labelColor : errorColor
+        setupColors()
         
         if let text = textField.text {
             if text.isEmpty {
