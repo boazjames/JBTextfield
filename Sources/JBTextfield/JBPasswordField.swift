@@ -110,6 +110,7 @@ public class JBPasswordField: BasePasswordField {
             addSubview(label)
             addSubview(textfield)
             addSubview(icon)
+            addSubview(iconPasswordToggle)
             addSubview(lblError)
             
             textfield.backgroundColor = boxBackgroundColor
