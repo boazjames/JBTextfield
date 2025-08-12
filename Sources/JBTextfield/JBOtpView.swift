@@ -85,6 +85,8 @@ class OtpView: UIView {
         return view
     } ()
     
+    private var itemHeight: CGFloat = 60
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -96,12 +98,18 @@ class OtpView: UIView {
         setupView()
     }
     
+    init(itemHeight: CGFloat) {
+        super.init(frame: .zero)
+        self.itemHeight = itemHeight
+        setupView()
+    }
+    
     private func setupView() {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.backgroundColor = .clear
         
 //        self.applyAspectRatio(aspectRation: 1)
-        self.heightAnchor.constraint(equalToConstant: 60).activate()
+        self.heightAnchor.constraint(equalToConstant: itemHeight).activate()
         
         self.layer.borderColor = UIColor.strokeColor.cgColor
         self.layer.cornerRadius = 5
@@ -177,6 +185,8 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
+    private var itemHeight: CGFloat = 60
+    
     private var otpViews: [OtpView] = []
     
     override init(frame: CGRect) {
@@ -192,9 +202,10 @@ public class JBOtpEntryView: UIStackView {
         setupOtpViews()
     }
     
-    public init(length: Int = 4, interItemSpacing: CGFloat = 20, enableUserInteraction: Bool = true, boxBackgroundColor: UIColor) {
+    public init(length: Int = 4, interItemSpacing: CGFloat = 20, itemHeight: CGFloat = 60, enableUserInteraction: Bool = true, boxBackgroundColor: UIColor) {
         super.init(frame: CGRect.zero)
         self.length = length
+        self.itemHeight = itemHeight
         self.interItemSpacing = interItemSpacing
         self.boxBackgroundColor = boxBackgroundColor
         setup()
@@ -217,7 +228,7 @@ public class JBOtpEntryView: UIStackView {
         otpViews.removeAll()
         
         ( 0...(length - 1)).forEach { idx in
-            let otpView = OtpView()
+            let otpView = OtpView(itemHeight: itemHeight)
             otpView.backgroundColor = boxBackgroundColor
             otpView.overlayView.isUserInteractionEnabled = enableUserInteraction
             otpView.textField.isUserInteractionEnabled = enableUserInteraction
