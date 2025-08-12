@@ -59,52 +59,95 @@ public class JBPasswordField: BasePasswordField {
         self.isUserInteractionEnabled = true
         self.textfield.keyboardType = keyboardType
         
-        self.addSubview(mainContainerView)
-        mainContainerView.addSubview(containerView)
-        containerView.addSubview(textfield)
-        containerView.addSubview(label)
-        containerView.addSubview(icon)
-        containerView.addSubview(iconPasswordToggle)
-        self.addSubview(lblError)
-        
-        mainContainerView.pinToView(parentView: self, bottom: false)
-        mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
-        
-        containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
-        containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
-        
-        labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
-        labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: containerView.topAnchor),
-            labelLeadingConstraint,
-            label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
-            labelHeightConstraint
-        ])
-        
-        icon.applyAspectRatio(aspectRation: 1)
-        NSLayoutConstraint.activate([
-            icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
-            icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            icon.widthAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        iconPasswordToggle.applyAspectRatio(aspectRation: 1)
-        NSLayoutConstraint.activate([
-            iconPasswordToggle.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
-            iconPasswordToggle.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
-            iconPasswordToggle.widthAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
-        NSLayoutConstraint.activate([
-            textfield.heightAnchor.constraint(equalToConstant: 40),
-            textfield.topAnchor.constraint(equalTo: label.centerYAnchor),
-            textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
-        
-        lblError.pinToView(parentView: self, top: false)
-        lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+        if style == .floating {
+            self.addSubview(mainContainerView)
+            mainContainerView.addSubview(containerView)
+            containerView.addSubview(textfield)
+            containerView.addSubview(label)
+            containerView.addSubview(icon)
+            self.addSubview(lblError)
+            
+            mainContainerView.pinToView(parentView: self, bottom: false)
+            mainContainerView.heightAnchor.constraint(equalToConstant: 60).activate()
+            
+            containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
+            containerView.centerYAnchor.constraint(equalTo: mainContainerView.centerYAnchor).activate()
+            
+            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+            labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+            NSLayoutConstraint.activate([
+                label.topAnchor.constraint(equalTo: containerView.topAnchor),
+                labelLeadingConstraint,
+                label.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+                labelHeightConstraint
+            ])
+            
+            icon.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+                icon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                icon.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            iconPasswordToggle.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                iconPasswordToggle.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+                iconPasswordToggle.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10),
+                iconPasswordToggle.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            textfield.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                textfield.heightAnchor.constraint(equalToConstant: 40),
+                textfield.topAnchor.constraint(equalTo: label.centerYAnchor),
+                textfield.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+            ])
+            
+            lblError.pinToView(parentView: self, top: false)
+            lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+            
+        } else {
+            addSubview(label)
+            addSubview(textfield)
+            addSubview(icon)
+            addSubview(lblError)
+            
+            textfield.backgroundColor = boxBackgroundColor
+            textfield.jbBorderColor = boxBorderColor
+            textfield.jbBorderWidth = boxBorderWidth
+            textfield.jbViewCornerRadius = boxCornerRadius
+            
+            labelHeightConstraint = label.heightAnchor.constraint(equalToConstant: 0)
+            labelLeadingConstraint = label.leadingAnchor.constraint(equalTo: leadingAnchor)
+            NSLayoutConstraint.activate([
+                label.topAnchor.constraint(equalTo: topAnchor),
+                labelLeadingConstraint,
+                label.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+            
+            icon.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                icon.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+                icon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
+                icon.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            iconPasswordToggle.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                iconPasswordToggle.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
+                iconPasswordToggle.trailingAnchor.constraint(equalTo: textfield.trailingAnchor, constant: -10),
+                iconPasswordToggle.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            textfield.pinToView(parentView: self, constant: 0, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                textfield.heightAnchor.constraint(equalToConstant: 50),
+                textfield.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 5)
+            ])
+            
+            lblError.pinToView(parentView: self, top: false)
+            lblError.topAnchor.constraint(equalTo: textfield.bottomAnchor, constant: 4).activate()
+        }
         
         textfield.textPadding = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 40)
         
@@ -125,6 +168,8 @@ public class JBPasswordField: BasePasswordField {
     }
     
     private func showLabel() {
+        guard style == .floating else { return }
+        
         self.layoutIfNeeded()
         let originY = label.frame.origin.y
         let distance: CGFloat = 20
@@ -138,6 +183,8 @@ public class JBPasswordField: BasePasswordField {
     }
     
     private func hideLabel() {
+        guard style == .floating else { return }
+        
         UIView.animate(withDuration: 0.3) {
             self.labelHeightConstraint.activate()
             self.layoutIfNeeded()
@@ -194,12 +241,20 @@ public class JBPasswordField: BasePasswordField {
         let errorMessage = lblError.text ?? ""
         
         if errorMessage.isEmpty {
-            mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            if style == .floating {
+                mainContainerView.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            } else {
+                textfield.jbBorderColor = textfield.isFirstResponder ? highlightColor : strokeColor
+            }
             icon.tintColor = textfield.isFirstResponder ? highlightColor : labelColor
             label.textColor = textfield.isFirstResponder ? highlightColor : labelColor
             secondaryLabel.textColor = textfield.isFirstResponder ? highlightColor : labelColor
         } else {
-            mainContainerView.jbBorderColor = errorColor
+            if style == .floating {
+                mainContainerView.jbBorderColor = errorColor
+            } else {
+                textfield.jbBorderColor = errorColor
+            }
             icon.tintColor = errorColor
             label.textColor = errorColor
             secondaryLabel.textColor = errorColor
@@ -216,10 +271,7 @@ public class JBPasswordField: BasePasswordField {
 // Mark: UITextFieldDelegate
 extension JBPasswordField: UITextFieldDelegate {
     public func textFieldDidBeginEditing(_ textField: UITextField) {
-        label.textColor = isErrorTextEmpty ? highlightColor : errorColor
-        secondaryLabel.textColor = isErrorTextEmpty ? highlightColor : errorColor
-        mainContainerView.jbBorderColor = isErrorTextEmpty ? highlightColor : errorColor
-        icon.tintColor = isErrorTextEmpty ? highlightColor : errorColor
+        setupColors()
         if let text = textField.text {
             if text.isEmpty {
                 showLabel()
@@ -230,10 +282,7 @@ extension JBPasswordField: UITextFieldDelegate {
     }
     
     public func textFieldDidEndEditing(_ textField: UITextField) {
-        label.textColor = isErrorTextEmpty ? labelColor : errorColor
-        secondaryLabel.textColor = isErrorTextEmpty ? labelColor : errorColor
-        mainContainerView.jbBorderColor = isErrorTextEmpty ? strokeColor : errorColor
-        icon.tintColor = isErrorTextEmpty ? labelColor : errorColor
+        setupColors()
         
         if let text = textField.text {
             if text.isEmpty {
