@@ -171,6 +171,12 @@ public class JBOtpEntryView: UIStackView {
         }
     }
     
+    @IBInspectable public var isSecureTextEntry = false {
+        didSet {
+            setupOtpViews()
+        }
+    }
+    
     private var otpViews: [OtpView] = []
     
     override init(frame: CGRect) {
@@ -221,6 +227,7 @@ public class JBOtpEntryView: UIStackView {
             otpView.textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
             otpView.tag = idx
             otpView.textField.tag = idx
+            otpView.textField.isSecureTextEntry = isSecureTextEntry
             otpViews.append(otpView)
             self.addArrangedSubview(otpView)
         }
