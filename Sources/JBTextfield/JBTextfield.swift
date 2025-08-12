@@ -332,7 +332,7 @@ public class BaseTextfield: UIView {
         }
         
         if myText != text {
-            sender.text = myText
+            sender.text = maxLength == 0 ? myText : String(myText.prefix(maxLength))
         }
         
         hideError()
@@ -488,7 +488,7 @@ public class JBTextfield: BaseTextfield {
                 return text
             }
             
-            textfield.text = myText
+            textfield.text = maxLength == 0 ? myText : String(myText.prefix(maxLength))
             
             label.textColor = labelColor
             
