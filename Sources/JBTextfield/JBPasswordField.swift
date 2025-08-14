@@ -65,6 +65,7 @@ public class JBPasswordField: BasePasswordField {
             containerView.addSubview(textfield)
             containerView.addSubview(label)
             containerView.addSubview(icon)
+            containerView.addSubview(iconPasswordToggle)
             self.addSubview(lblError)
             
             mainContainerView.pinToView(parentView: self, bottom: false)

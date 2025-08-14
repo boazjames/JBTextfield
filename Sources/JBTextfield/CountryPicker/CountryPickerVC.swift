@@ -224,7 +224,8 @@ extension CountryPickerVC {
         if customDialCodes.isEmpty {
             countries.append(contentsOf: allCountries)
         } else {
-            let filtered = allCountries.filter({ self.customDialCodes.contains($0.dialCode) })
+            customDialCodes = customDialCodes.map({ $0.lowercased() })
+            let filtered = allCountries.filter({ self.customDialCodes.contains($0.dialCode) || self.customDialCodes.contains($0.code.lowercased()) || self.customDialCodes.contains($0.name.lowercased()) })
             countries.append(contentsOf: filtered)
         }
         if countries.isEmpty {

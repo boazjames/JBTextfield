@@ -578,6 +578,7 @@ extension JBTextfield: UITextFieldDelegate {
     }
     
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print("shouldChangeCharactersIn replacementString", string)
         let currentText = textField.text ?? ""
         
         var fullText: String {
@@ -611,6 +612,10 @@ extension JBTextfield: UITextFieldDelegate {
         isDeleting = myFullText.count < currentText.count
                         
         return myFullText.count <= maxLength || maxLength == 0
+    }
+    
+    public func textFieldDidChangeSelection(_ textField: UITextField) {
+        print("textFieldDidChangeSelection")
     }
 }
 

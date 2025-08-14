@@ -24,4 +24,10 @@ public class TextFieldWithPadding: UITextField {
         let rect = super.editingRect(forBounds: bounds)
         return rect.inset(by: textPadding)
     }
+    
+    public override func paste(_ sender: Any?) {
+        super.paste(sender)
+        
+        sendActions(for: .editingChanged)
+    }
 }
