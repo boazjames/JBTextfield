@@ -624,6 +624,7 @@ public class JBPlainTextfield: BaseTextfield {
     public var minWidth: CGFloat = 100 {
         didSet {
             textfieldMinWidthConstraint.constant = minWidth
+            textfieldMinWidthConstraint.isActive = minWidth > 0
         }
     }
     
