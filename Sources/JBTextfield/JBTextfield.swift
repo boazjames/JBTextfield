@@ -646,6 +646,7 @@ public class JBPlainTextfield: BaseTextfield {
         
         self.addSubview(textfield)
         
+        textfield.setContentHuggingPriority(.defaultLow, for: .horizontal)
         textfield.pinToView(parentView: self)
         textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
         NSLayoutConstraint.activate([
