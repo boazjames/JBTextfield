@@ -988,6 +988,7 @@ public class JBPlainAmountTextfield: BaseTextfield {
     public var minWidth: CGFloat = 100 {
         didSet {
             textfieldMinWidthConstraint.constant = minWidth
+            textfieldMinWidthConstraint.isActive = minWidth > 0
         }
     }
     
@@ -1013,11 +1014,13 @@ public class JBPlainAmountTextfield: BaseTextfield {
         self.addSubview(secondaryLabel)
         self.addSubview(textfield)
         
+        secondaryLabel.setContentHuggingPriority(.required, for: .horizontal)
         NSLayoutConstraint.activate([
             secondaryLabel.centerYAnchor.constraint(equalTo: textfield.centerYAnchor),
             secondaryLabel.leadingAnchor.constraint(equalTo: leadingAnchor)
         ])
         
+        textfield.setContentHuggingPriority(.defaultLow, for: .horizontal)
         textfield.pinToView(parentView: self, leading: false)
         textfieldMinWidthConstraint = textfield.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth)
         NSLayoutConstraint.activate([
