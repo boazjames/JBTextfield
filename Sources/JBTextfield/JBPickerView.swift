@@ -64,7 +64,41 @@ public class BasePickerView: UIView {
     
     @IBInspectable public var boxBackgroundColor: UIColor = UIColor.textFieldBackgroundColor {
         didSet {
-            mainContainerView.backgroundColor = boxBackgroundColor
+            if style == .floating {
+                mainContainerView.backgroundColor = boxBackgroundColor
+            } else {
+                label.backgroundColor = boxBackgroundColor
+            }
+        }
+    }
+    
+    @IBInspectable public var boxCornerRadius: CGFloat = 5 {
+        didSet {
+            if style == .floating {
+                mainContainerView.jbViewCornerRadius = boxCornerRadius
+            } else {
+                label.jbViewCornerRadius = boxCornerRadius
+            }
+        }
+    }
+    
+    @IBInspectable public var boxBorderWidth: CGFloat = 1 {
+        didSet {
+            if style == .floating {
+                mainContainerView.jbBorderWidth = boxBorderWidth
+            } else {
+                label.jbBorderWidth = boxBorderWidth
+            }
+        }
+    }
+    
+    @IBInspectable public var boxBorderColor: UIColor = UIColor.strokeColor {
+        didSet {
+            if style == .floating {
+                mainContainerView.jbBorderColor = boxBorderColor
+            } else {
+                label.jbBorderColor = boxBorderColor
+            }
         }
     }
     
@@ -73,9 +107,15 @@ public class BasePickerView: UIView {
             pickerIcon.image = iconImage?.withRenderingMode(.alwaysTemplate)
             pickerIcon.isHidden = iconImage == nil
             label.leftInset = iconImage == nil ? 10 : 40
-            placeHolderLabelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+            if style == .floating {
+                placeHolderLabelLeadingConstraint.constant = iconImage == nil ? 10 : 40
+            } else {
+                placeHolderLabelLeadingConstraint.constant = iconImage == nil ? 0 : 30
+            }
         }
     }
+    
+    public private(set) var style: JBTextFieldStyle = JBTextFieldStyle.floating
     
     var placeHolderLabelLeadingConstraint: NSLayoutConstraint!
     
@@ -173,6 +213,12 @@ public class BasePickerView: UIView {
         setupViews()
     }
     
+    public init(style: JBTextFieldStyle) {
+        super.init(frame: .zero)
+        self.style = style
+        setupViews()
+    }
+    
     public func setPlaceholder(_ placeholder: String) {
         self.labelText = placeholder
     }
@@ -237,59 +283,108 @@ public class JBPickerView: BasePickerView {
         self.translatesAutoresizingMaskIntoConstraints = false
         self.isUserInteractionEnabled = true
         
-        self.addSubview(mainContainerView)
-        mainContainerView.addSubview(containerView)
-        containerView.addSubview(placeHolderLabel)
-        containerView.addSubview(label)
-        containerView.addSubview(pickerIcon)
-        containerView.addSubview(icon)
-        self.addSubview(lblError)
-        
-        mainContainerView.pinToView(parentView: self, bottom: false)
-        
-        containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
-        NSLayoutConstraint.activate([
-            containerView.topAnchor.constraint(equalTo: mainContainerView.topAnchor, constant: 0),
-            containerView.bottomAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 0),
-            containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 60)
-        ])
-        
-        placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
-        NSLayoutConstraint.activate([
-            placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
-            placeHolderLabelLeadingConstraint,
-            placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
-        ])
-        
-        pickerIcon.applyAspectRatio(aspectRation: 1)
-        NSLayoutConstraint.activate([
-            pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-            pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
-            pickerIcon.widthAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
-        labelTopConstraint = label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 15)
-        label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
-        NSLayoutConstraint.activate([
-            labelTopConstraint,
-            label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
-            labelHeightConstraint
-        ])
-        
-        NSLayoutConstraint.activate([
-            icon.widthAnchor.constraint(equalToConstant: 18),
-            icon.heightAnchor.constraint(equalToConstant: 18),
-            icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-            icon.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -15)
-        ])
-        
-        lblError.pinToView(parentView: self, top: false)
-        lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
-        
-        label.leftInset = 10
-        
-        mainContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showActionPicker)))
+        if style == .floating {
+            self.addSubview(mainContainerView)
+            mainContainerView.addSubview(containerView)
+            containerView.addSubview(placeHolderLabel)
+            containerView.addSubview(label)
+            containerView.addSubview(pickerIcon)
+            containerView.addSubview(icon)
+            self.addSubview(lblError)
+            
+            mainContainerView.pinToView(parentView: self, bottom: false)
+            
+            containerView.pinToView(parentView: mainContainerView, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                containerView.topAnchor.constraint(equalTo: mainContainerView.topAnchor, constant: 0),
+                containerView.bottomAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 0),
+                containerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 60)
+            ])
+            
+            placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+            NSLayoutConstraint.activate([
+                placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+                placeHolderLabelLeadingConstraint,
+                placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
+            ])
+            
+            pickerIcon.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                pickerIcon.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            labelHeightConstraint = placeHolderLabel.heightAnchor.constraint(equalToConstant: 0)
+            labelTopConstraint = label.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 15)
+            label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                labelTopConstraint,
+                label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
+                labelHeightConstraint
+            ])
+            
+            NSLayoutConstraint.activate([
+                icon.widthAnchor.constraint(equalToConstant: 18),
+                icon.heightAnchor.constraint(equalToConstant: 18),
+                icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                icon.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -15)
+            ])
+            
+            lblError.pinToView(parentView: self, top: false)
+            lblError.topAnchor.constraint(equalTo: mainContainerView.bottomAnchor, constant: 4).activate()
+            
+            label.leftInset = 10
+            
+            mainContainerView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showActionPicker)))
+        } else {
+            addSubview(placeHolderLabel)
+            addSubview(label)
+            addSubview(pickerIcon)
+            addSubview(icon)
+            addSubview(lblError)
+            
+            label.isUserInteractionEnabled = true
+            label.backgroundColor = boxBackgroundColor
+            label.labelBorderColor = boxBorderColor
+            label.labelBorderWidth = boxBorderWidth
+            label.labelCornerRadius = boxCornerRadius
+            
+            placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+            NSLayoutConstraint.activate([
+                placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+                placeHolderLabelLeadingConstraint,
+                placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
+            ])
+            
+            pickerIcon.applyAspectRatio(aspectRation: 1)
+            NSLayoutConstraint.activate([
+                pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                pickerIcon.widthAnchor.constraint(equalToConstant: 20)
+            ])
+            
+            label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
+            NSLayoutConstraint.activate([
+                labelTopConstraint,
+                label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
+                label.heightAnchor.constraint(equalToConstant: 50)
+            ])
+            
+            NSLayoutConstraint.activate([
+                icon.widthAnchor.constraint(equalToConstant: 18),
+                icon.heightAnchor.constraint(equalToConstant: 18),
+                icon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+                icon.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
+            ])
+            
+            lblError.pinToView(parentView: self, top: false)
+            lblError.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4).activate()
+            
+            label.leftInset = 10
+            
+            label.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(showActionPicker)))
+        }
     }
     
     override public func setPlaceholder(_ placeholder: String) {
@@ -305,14 +400,14 @@ public class JBPickerView: BasePickerView {
             label.text = self.labelText
             label.textColor = placeholderColor
             
-            if !labelHeightConstraint.isActive {
+            if !labelHeightConstraint.isActive && style == .floating {
                 hideLabel()
             }
         } else {
             label.text = text
             label.textColor = labelColor
             
-            if labelHeightConstraint.isActive {
+            if labelHeightConstraint.isActive && style == .floating {
                 showLabel()
             }
         }
