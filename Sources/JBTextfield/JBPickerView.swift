@@ -352,22 +352,21 @@ public class JBPickerView: BasePickerView {
             
             placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
             NSLayoutConstraint.activate([
-                placeHolderLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 8),
+                placeHolderLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
                 placeHolderLabelLeadingConstraint,
-                placeHolderLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -10)
+                placeHolderLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
             ])
             
             pickerIcon.applyAspectRatio(aspectRation: 1)
             NSLayoutConstraint.activate([
                 pickerIcon.centerYAnchor.constraint(equalTo: label.centerYAnchor),
-                pickerIcon.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+                pickerIcon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
                 pickerIcon.widthAnchor.constraint(equalToConstant: 20)
             ])
             
             label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
             NSLayoutConstraint.activate([
                 labelTopConstraint,
-                label.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -15),
                 label.heightAnchor.constraint(equalToConstant: 50)
             ])
             
