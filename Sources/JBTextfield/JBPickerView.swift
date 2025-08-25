@@ -350,7 +350,7 @@ public class JBPickerView: BasePickerView {
             label.labelBorderWidth = boxBorderWidth
             label.labelCornerRadius = boxCornerRadius
             
-            placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10)
+            placeHolderLabelLeadingConstraint = placeHolderLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
             NSLayoutConstraint.activate([
                 placeHolderLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
                 placeHolderLabelLeadingConstraint,
@@ -364,7 +364,7 @@ public class JBPickerView: BasePickerView {
                 pickerIcon.widthAnchor.constraint(equalToConstant: 20)
             ])
             
-            label.pinToView(parentView: containerView, constant: 0, top: false, bottom: false)
+            label.pinToView(parentView: self, constant: 0, top: false, bottom: false)
             NSLayoutConstraint.activate([
                 labelTopConstraint,
                 label.heightAnchor.constraint(equalToConstant: 50)
